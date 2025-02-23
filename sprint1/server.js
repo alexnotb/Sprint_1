@@ -9,7 +9,7 @@ app.get('/home', (req, res) => {
     readFile('./home.html', 'utf8', (err, data) => {
         if (err) {
             console.error(err);
-            res.status(500).send('Error reading file');
+            res.status(500).send('Error reading file ');
             return;
         }
         res.send(data);
