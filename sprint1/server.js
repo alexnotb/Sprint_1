@@ -32,7 +32,7 @@ app.get('/order', (req, res) => {
 });
 app.get('/singup', (req, res) => {
     res.sendFile(path.join(__dirname, 'home.html'));
-});
+}); 
 
 // Handle 404 errors
 app.use((req, res) => {
