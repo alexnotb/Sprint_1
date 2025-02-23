@@ -16,23 +16,23 @@ app.get('/home', (req, res) => {
     res.sendFile(path.join(__dirname, 'home.html'));
 });
 app.get('/account', (req, res) => {
-    res.sendFile(path.join(__dirname, 'home.html'));
+    res.sendFile(path.join(__dirname, 'account.html'));
 });
 app.get('/chekout', (req, res) => {
-    res.sendFile(path.join(__dirname, 'home.html'));
+    res.sendFile(path.join(__dirname, 'chekout.html'));
 });
 app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'home.html'));
+    res.sendFile(path.join(__dirname, 'login.html'));
 });
 app.get('/menu', (req, res) => {
-    res.sendFile(path.join(__dirname, 'home.html'));
+    res.sendFile(path.join(__dirname, 'menu.html'));
 });
 app.get('/order', (req, res) => {
-    res.sendFile(path.join(__dirname, 'home.html'));
+    res.sendFile(path.join(__dirname, 'order.html'));
 });
 app.get('/singup', (req, res) => {
-    res.sendFile(path.join(__dirname, 'home.html'));
-}); 
+    res.sendFile(path.join(__dirname, 'singup.html'));
+});  
 
 // Handle 404 errors
 app.use((req, res) => {
