@@ -1,14 +1,25 @@
-const http = require('http');
+const express = require('express');
+const { readFile } = require('fs');
+const app = express();
 
 const hostname = '127.0.0.1';
 const port = 3000;
 
-const server = http.createServer((req, res) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Hello, World !\n');
+app.get('/home', (req, res) => {
+    readFile('./home.html', 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error reading file');
+            return;
+        }
+        res.send(data);
+    });
 });
 
-server.listen(port, hostname, () => {
+app.get('/', (req, res) => {
+    res.send('Hello, World!\n');
+});
+
+app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
