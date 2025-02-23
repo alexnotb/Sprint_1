@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Настройки профиля</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Подключаем CSS-файл со стилями -->
+  <link rel="stylesheet" href="/pages/main.css">
+  <script src="account.js" defer></script>
+ 
+</head>
+<body>
+  <!-- Шапка сайта -->
+  <header>
+    <div class="header-container">
+      <div class="content-wrapper">
+      <div class="header-container">
+        <img src="/image/logo.jpg" alt="Логотип" class="logo">
+        
+        <input type="checkbox" id="nav-toggle">
+        <label for="nav-toggle" class="hamburger-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+    
+        <nav class="nav-links">
+          <a href="/pages/home/home.html">HOME</a>
+          <a href="/pages/menu/menu.html">MENU</a>
+        </nav>
+    
+        <div class="account-controls">
+          <button type="button" onclick="location.href='/pages/login/login.html';">LOGIN</button>
+          <button type="button" onclick="location.href='pages/singup/singup.html';">SIGNIN</button>
+        </div>
+      </div>
+    </div>
+    </div>
+    </header>
+
+  <!-- Основной контент -->
+  <main>
+    <div class="container">
+      <!-- Боковая панель (левый столбец) -->
+      <aside class="left">
+        <div class="settings-sidebar">
+          <div class="profile-icon">
+            <span>+</span>
+          </div>
+          <h3>Account picture</h3>
+        </div>
+      </aside>
+
+      <!-- Форма профиля (правый столбец) -->
+      <section class="right card profile-form">
+        <h2>Personal Information</h2>
+        <form id="profile-form">
+          <label for="first-name">First Name</label>
+          <input type="text" id="first-name" placeholder="Enter your first name" required>
+
+          <label for="last-name">Last Name</label>
+          <input type="text" id="last-name" placeholder="Enter your last name" required>
+
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required>
+
+          <button type="submit" class="submit-button">Save</button>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <!-- Подвал сайта -->
+  <footer>
+    <div class="content-wrapper">
+      <div class="blok">
+        <a class="email" href="mailto:EXAMPLE@GMAIL.COM">EXAMPLE@GMAIL.COM</a>
+        <a class="number" href="tel:+123456789">Contact: +123456789</a>
+      </div>
+    </div>
+</footer>
+</body>
+</html>

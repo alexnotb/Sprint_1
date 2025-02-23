@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Shop</title>
+    <link rel="stylesheet" href="/sprint1/pages/main.css">
+    <style>
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(300px, 1fr)); /* Две колонки */
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+
+    /* Стили для карточки с изображением */
+    .card.image {
+      padding: 0; /* Убираем отступы, чтобы изображение занимало весь контейнер */
+      border: none; /* Если не нужна рамка, можно убрать */
+      display: block;
+      width: 100%;
+      height: 373px; /* Match the card height */
+      overflow: hidden;
+    }
+
+.card.image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr; /* Одна карточка на строку */
+        padding: 10px; /* Уменьшаем отступы для меньших экранов */
+    }
+}
+
+
+/* Общий стиль для каждой карточки */
+.card {
+  width: 100%;
+  max-width: 600px;
+  height: 373px;
+  display: flex;
+  background-color: var(--minty-pastel-green);
+  border: 1px solid var(--medium-brown);
+  border-radius: 20px;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+/* Медиа-запрос для мобильных устройств (ширина экрана до 768px) */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr; /* Одна карточка на строку */
+  }
+}
+      /* Блок с текстом (слева) */
+      .text {
+        flex: 1;                  /* Занимает всё доступное пространство, кроме картинки */
+        padding: 15px;            /* Внутренние отступы */
+        display: flex;            
+        flex-direction: column;
+        justify-content: center;  /* Центрируем текст по вертикали */
+      }
+
+    </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="content-wrapper">
+      <div class="header-container">
+        <img src="/sprint1/image/logo.jpg" alt="Логотип" class="logo">
+        
+        <input type="checkbox" id="nav-toggle">
+        <label for="nav-toggle" class="hamburger-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+    
+        <nav class="nav-links">
+          <a href="/sprint1/pages/home/home.html">HOME</a>
+          <a href="/sprint1/pages/menu/menu.html">MENU</a>
+        </nav>
+    
+        <div class="account-controls">
+          <button type="button" onclick="location.href='/sprint1/pages/login/login.html';">LOGIN</button>
+          <button type="button" onclick="location.href='/sprint1/pages/singup/singup.html';">SIGNIN</button>
+        </div>
+      </div>
+    </div>
+    </div>
+  </header>
+    
+  <main>
+    <div class="desktop-container">
+      <div class="content-wrapper">
+        <div class="container">
+          <div class="card text">
+            <h2>Добро пожаловать в нашу кофейню!</h2>
+            <p>Добро пожаловать в нашу уютную кофейню! Здесь каждая чашка кофе — результат тщательного отбора зёрен и искренней заботы о наших гостях. Мы верим, что ароматный напиток способен не только взбодрить, но и объединить, поэтому мы стремимся создать атмосферу, к которой хочется возвращаться снова и снова.</p>
+          </div>
+          <div class="card image">
+            <img src="/sprint1/image/coffeeshop.png" alt="Интерьер кофейни">
+          </div>
+          <div class="card image">
+            <img src="/sprint1/image/3cups.jpg" alt="Кофейные напитки">
+          </div>
+          <div class="card text">
+            <h2>Наше меню</h2>
+            <p>В нашем меню представлены классический эспрессо и капучино, а также фирменные рецепты, вдохновлённые лучшими кофейными традициями мира. Наслаждайтесь мягкими звуками джаза, погружайтесь в неспешные беседы и дарите себе время для наслаждения моментом — ведь настоящий кофейный перерыв начинается именно здесь.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  
+
+    <footer>
+      <div class="content-wrapper">
+        <div class="blok">
+          <a class="email" href="mailto:EXAMPLE@GMAIL.COM">EXAMPLE@GMAIL.COM</a>
+          <a class="number" href="tel:+123456789">Contact: +123456789</a>
+        </div>
+      </div>
+  </footer>
+    <script src="/sprint1/pages/accaunt.js"></script>
+</body>
+</html>

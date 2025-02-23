@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coffee Shop</title>
+  <link rel="stylesheet" href="/pages/main.css" />
+  <style>
+ .container {
+  background: #eaf3eb;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;            /* Изменено на 100%, чтобы учитывать padding */
+  max-width: 450px;       /* Ограничение максимальной ширины */
+  margin: 0 auto;
+  box-sizing: border-box; /* Учитывает padding в ширине */
+  
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+/* Для мобильных устройств */
+@media (max-width: 500px) {
+  .container {
+    padding: 20px; /* Уменьшенный padding для небольших экранов */
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="desktop-container">
+  <div class="content-wrapper">
+  <!-- The image now directly uses the 'logo' class -->
+  <img class="logo" src="/image/logo.jpg" alt="Логотип" />
+
+  <div class="container">
+    <h2>Personal Information</h2>
+    <label for="first-name">First Name</label>
+    <input type="text" id="first-name" placeholder="Enter your first name" required />
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Enter your password" required />
+    <button>Login</button>
+  </div>
+  </div>
+  </div>
+</body>
+</html>

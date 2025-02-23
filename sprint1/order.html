@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Shop</title>
+    <link rel="stylesheet" href="/pages/main.css">
+    <style>
+        
+        .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15%;
+  background-color: #DDEAE1;
+  border-radius: 20px;
+  border: 1px solid #3A2A1A;
+  width: 97%; /* растягивает контейнер на всю ширину окна */
+  box-sizing: border-box; /* учитывает padding и border */
+}
+
+
+    
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+          <div class="content-wrapper">
+          <div class="header-container">
+            <img src="/image/logo.jpg" alt="Логотип" class="logo">
+            
+            <input type="checkbox" id="nav-toggle">
+            <label for="nav-toggle" class="hamburger-menu">
+              <span></span>
+              <span></span>
+              <span></span>
+            </label>
+        
+            <nav class="nav-links">
+              <a href="/pages/home/home.html">HOME</a>
+              <a href="/pages/menu/menu.html">MENU</a>
+            </nav>
+        
+            <div class="account-controls">
+              <button type="button" onclick="location.href='/pages/login/login.html';">LOGIN</button>
+              <button type="button" onclick="location.href='pages/singup/singup.html';">SIGNIN</button>
+            </div>
+          </div>
+        </div>
+        </div>
+    </header>
+
+    <div class="content-wrapper">
+        <div class="container">
+        <h2>Name ☕</h2>
+        <div class="dropdown">
+            <button>Size ▼</button>
+        </div>
+        <div class="counter">
+            <button>Count</button>
+            <div>
+                <button onclick="decreaseCount('countValue')">-</button>
+                <span id="countValue">1</span>
+                <button onclick="increaseCount('countValue')">+</button>
+            </div>
+        </div>
+        <div class="counter">
+            <button>Sugar</button>
+            <div>
+                <button onclick="decreaseCount('sugarValue')">-</button>
+                <span id="sugarValue">1</span>
+                <button onclick="increaseCount('sugarValue')">+</button>
+            </div>
+        </div>
+        <button class="next-button">Next</button>
+    </div>
+    </div>
+
+    <footer>
+        <div class="content-wrapper">
+          <div class="blok">
+            <a class="email" href="mailto:EXAMPLE@GMAIL.COM">EXAMPLE@GMAIL.COM</a>
+            <a class="number" href="tel:+123456789">Contact: +123456789</a>
+          </div>
+        </div>
+    </footer>
+
+    <script>
+        function increaseCount(id) {
+            let element = document.getElementById(id);
+            let value = parseInt(element.innerText);
+            element.innerText = value + 1;
+        }
+
+        function decreaseCount(id) {
+            let element = document.getElementById(id);
+            let value = parseInt(element.innerText);
+            if (value > 1) {
+                element.innerText = value - 1;
+            }
+        }
+    </script>
+</body>
+</html>
+

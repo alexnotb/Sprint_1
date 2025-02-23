@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Документ</title>
+  <link rel="stylesheet" href="/pages/main.css">
+  <style>
+      
+
+/* Контейнер для всех карточек */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(300px, 1fr)); /* По умолчанию две колонки */
+  gap: 20px; 
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+/* Общий стиль для каждой карточки */
+.coffee-card {
+  width: 100%;
+  max-width: 600px;
+  height: 373px;
+  display: flex;
+  background-color: var(--minty-pastel-green);
+  border: 1px solid var(--medium-brown);
+  border-radius: 20px;
+  overflow: hidden;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+/* Медиа-запрос для мобильных устройств (ширина экрана до 768px) */
+@media (max-width: 768px) {
+  .cards-container {
+    grid-template-columns: 1fr; /* Одна карточка на строку */
+  }
+}
+
+  
+
+      /* Блок с текстом (слева) */
+      .coffee-text {
+        flex: 1;                  /* Занимает всё доступное пространство, кроме картинки */
+        padding: 15px;            /* Внутренние отступы */
+        display: flex;            
+        flex-direction: column;
+        justify-content: center;  /* Центрируем текст по вертикали */
+      }
+  
+      .coffee-text h2 {
+        margin: 0 0 10px;         /* Отступ снизу у заголовка */
+        font-size: 20px;
+        color: var(--dark-brown);
+      }
+  
+      .coffee-text p {
+        margin: 0;
+        line-height: 1.4;
+        font-size: 14px;
+        color: var(--medium-brown);
+      }
+  
+      /* Блок с картинкой (справа) */
+      .coffee-image {
+        width: 313px;               /* Половина карточки */
+        height: 373px;           /* Фиксированная высота равная высоте карточки */
+        display: flex;
+        justify-content: center;  
+        align-items: center;      
+        background-color: var(--light-brown);
+        overflow: hidden;         /* Предотвращает выход изображения за пределы */
+      }
+  
+      .coffee-image img {
+        width: 100%;             /* Занимает всю ширину контейнера */
+        height: 100%;            /* Занимает всю высоту контейнера */
+        object-fit: cover;       /* Сохраняет пропорции, заполняя контейнер */
+      }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="content-wrapper">
+      <div class="header-container">
+        <img src="/image/logo.jpg" alt="Логотип" class="logo">
+        
+        <input type="checkbox" id="nav-toggle">
+        <label for="nav-toggle" class="hamburger-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+    
+        <nav class="nav-links">
+          <a href="/pages/home/home.html">HOME</a>
+          <a href="/pages/menu/menu.html">MENU</a>
+        </nav>
+    
+        <div class="account-controls">
+          <button type="button" onclick="location.href='/pages/login/login.html';">LOGIN</button>
+          <button type="button" onclick="location.href='pages/singup/singup.html';">SIGNIN</button>
+        </div>
+      </div>
+    </div>
+    </div>
+    </header>
+    <div class="content-wrapper">
+      <!-- Ваш контент здесь -->
+      <div class="cards-container">
+        <!-- Карточки генерируются скриптом -->
+      </div>
+    </div>
+  
+  <footer>
+    <div class="content-wrapper">
+      <div class="blok">
+        <a class="email" href="mailto:EXAMPLE@GMAIL.COM">EXAMPLE@GMAIL.COM</a>
+        <a class="number" href="tel:+123456789">Contact: +123456789</a>
+      </div>
+    </div>
+</footer>
+  <script>
+        class CoffeeCard {
+            constructor(name, description, imageUrl) {
+                this.name = name;
+                this.description = description;
+                this.imageUrl = imageUrl;
+            }
+            
+            render() {
+                return `
+                    <div class="coffee-card">
+                        <div class="coffee-text">
+                            <h2>${this.name}</h2>
+                            <p>${this.description}</p>
+                        </div>
+                        <div class="coffee-image">
+                            <img src="${this.imageUrl}" alt="${this.name}">
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        const coffeeData = [
+            {
+                name: 'Cappuccino',
+                description: 'A classic blend of bold espresso and velvety milk foam. Every sip is a harmony of taste and texture, wrapping you in warmth and comfort.',
+                imageUrl: '/image/cappuccino.jpg'
+            },
+            {
+                name: 'Espresso',
+                description: 'A small cup packed with bold energy. This rich, intense drink is the essence of true coffee craftsmanship, inspiring from the very first sip.',
+                imageUrl: '/image/espresso.jpg'
+            },
+            {
+                name: 'Mocha',
+                description: 'A rich fusion of espresso, chocolate, and milk, creating a decadent treat for the senses. Sweet and bold, it\'s a moment of indulgence in every sip.',
+                imageUrl: '/image/mocha.jpg'
+            },
+            {
+                name: 'Latte',
+                description: 'Smooth and soothing, a latte is the perfect balance of robust espresso and creamy frothed milk. A gentle invitation to savor life\'s little pleasures.',
+                imageUrl: '/image/latte.jpg'
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.cards-container');
+            container.innerHTML = coffeeData
+                .map(data => new CoffeeCard(data.name, data.description, data.imageUrl).render())
+                .join('');
+        });
+  </script>
+</body> 
+</html>
+
+
+
