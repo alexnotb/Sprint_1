@@ -12,6 +12,27 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'home.html'));
 });
+app.get('/home', (req, res) => {
+    res.sendFile(path.join(__dirname, 'home.html'));
+});
+app.get('/account', (req, res) => {
+    res.sendFile(path.join(__dirname, 'home.html'));
+});
+app.get('/chekout', (req, res) => {
+    res.sendFile(path.join(__dirname, 'home.html'));
+});
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'home.html'));
+});
+app.get('/menu', (req, res) => {
+    res.sendFile(path.join(__dirname, 'home.html'));
+});
+app.get('/order', (req, res) => {
+    res.sendFile(path.join(__dirname, 'home.html'));
+});
+app.get('/singup', (req, res) => {
+    res.sendFile(path.join(__dirname, 'home.html'));
+});
 
 // Handle 404 errors
 app.use((req, res) => {
