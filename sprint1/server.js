@@ -42,7 +42,6 @@ app.get('/singup', (req, res) => {
 app.post('/register', (req, res) => {
     const { firstName, lastName, password } = req.body;
 
-    // Validate input
     if (!firstName || !lastName || !password) {
         return res.status(400).json({ error: "All fields are required" });
     }
@@ -50,33 +49,48 @@ app.post('/register', (req, res) => {
     const userData = {
         firstName,
         lastName,
-        password: password, // In production, hash this password!
+        password: password,
         createdAt: new Date().toISOString()
     };
 
-    // Read existing users or create new array
-    const usersPath = path.join(__dirname, 'data', 'users.json');
-    let users = [];
+    const dataDir = path.join(__dirname, 'data');
+    const usersPath = path.join(dataDir, 'users.json');
     
     try {
+        // Ensure data directory exists
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir, { recursive: true });
+        }
+
+        // Initialize users array
+        let users = [];
+
+        // Read existing users file if it exists
         if (fs.existsSync(usersPath)) {
-            const data = fs.readFileSync(usersPath, 'utf8');
-            users = JSON.parse(data);
+            try {
+                const fileContent = fs.readFileSync(usersPath, 'utf8');
+                if (fileContent) {
+                    const parsedUsers = JSON.parse(fileContent);
+                    if (Array.isArray(parsedUsers)) {
+                        users = parsedUsers;
+                    } else {
+                        console.warn('users.json exists but is not an array, creating new array');
+                    }
+                }
+            } catch (parseError) {
+                console.error('Error parsing users.json:', parseError);
+                return res.status(500).json({ error: "Error reading user data" });
+            }
         }
         
         users.push(userData);
         
-        // Ensure data directory exists
-        if (!fs.existsSync(path.join(__dirname, 'data'))) {
-            fs.mkdirSync(path.join(__dirname, 'data'));
-        }
-        
-        // Write updated users array
-        fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+        // Write updated users array with proper formatting
+        fs.writeFileSync(usersPath, JSON.stringify(users, null, 2), 'utf8');
         
         res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
-        console.error('Error saving user:', error);
+        console.error('Error in registration process:', error);
         res.status(500).json({ error: "Error registering user" });
     }
 });
