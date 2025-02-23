@@ -39,13 +39,42 @@
 
   <div class="container">
     <h2>Personal Information</h2>
-    <label for="first-name">First Name</label>
-    <input type="text" id="first-name" placeholder="Enter your first name" required />
-    <label for="password">Password</label>
-    <input type="password" id="password" placeholder="Enter your password" required />
-    <button>Login</button>
+    <form id="login-form">
+      <label for="first-name">First Name</label>
+      <input type="text" id="first-name" name="firstName" placeholder="Enter your first name" required />
+      <label for="last-name">Last Name</label>
+      <input type="text" id="last-name" name="lastName" placeholder="Enter your last name" required />
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password" required />
+      <button type="submit">Login</button>
+    </form>
   </div>
   </div>
   </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      
+      const firstName = document.getElementById('first-name').value;
+      const lastName = document.getElementById('last-name').value;
+      const password = document.getElementById('password').value;
+
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ firstName, lastName, password })
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert(result.message);
+      } else {
+        alert(result.error);
+      }
+    });
+  </script>
 </body>
 </html>
