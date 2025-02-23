@@ -57,5 +57,38 @@
   </div>
   </div>
   </div>
+
+  <script>
+    document.getElementById('create-btn').addEventListener('click', async () => {
+        const firstName = document.getElementById('first-name').value;
+        const lastName = document.getElementById('last-name').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+    
+        if (password !== confirmPassword) {
+            alert("Пароли не совпадают!");
+            return;
+        }
+    
+        const userData = { firstName, lastName, password };
+    
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userData)
+        });
+    
+        const result = await response.json();
+        
+        if (response.ok) {
+            alert(result.message);
+            window.location.href = "/home"; // Перенаправление на главную страницу
+        } else {
+            alert("Ошибка регистрации: " + result.error);
+        }
+    });
+    </script>
+    
+    
 </body>
 </html>
