@@ -42,5 +42,31 @@ async function checkAuthStatus() {
     }
 }
 
+async function logoutUser() {
+    try {
+        const response = await fetch('/logout', { 
+            method: 'POST',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
+        });
+        if (response.ok) {
+            // Clear any client-side storage
+            sessionStorage.clear();
+            localStorage.clear();
+            
+            // Force reload home page to clear any cached state
+            window.location.replace('/');
+        } else {
+            alert('Logout failed');
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('Error during logout');
+    }
+}
+
 // Initialize auth status check when script loads
 document.addEventListener('DOMContentLoaded', checkAuthStatus);
