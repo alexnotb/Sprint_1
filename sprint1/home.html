@@ -142,7 +142,6 @@ html, body {
         </div>
       </div>
   </footer>
-    <script src="/sprint1/pages/accaunt.js"></script>
     <script>
 async function checkAuthStatus() {
     try {
@@ -154,9 +153,9 @@ async function checkAuthStatus() {
             accountControls.innerHTML = `
                 <button type="button" onclick="location.href='/account';" 
                         style="background: none; border: none; cursor: pointer;">
-                    <img src="/user-icon.png" alt="${data.user.firstName}" 
-                         style="width: 40px; height: 40px; border-radius: 50%; 
-                                object-fit: cover; background: #dce8d9;">
+                    <div class="profile-icon" style="width: 40px; height: 40px; margin: 0;">
+                        <span style="color: var(--very-light-beige); font-size: 24px;">+</span>
+                    </div>
                 </button>
             `;
         } else {

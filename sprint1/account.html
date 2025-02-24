@@ -80,5 +80,34 @@
       </div>
     </div>
 </footer>
+<script>
+  async function checkAuthStatus() {
+    try {
+        const response = await fetch('/auth/status');
+        const data = await response.json();
+        const accountControls = document.querySelector('.account-controls');
+        
+        if (data.loggedIn) {
+            accountControls.innerHTML = `
+                <button type="button" onclick="location.href='/account';" 
+                        style="background: none; border: none; cursor: pointer;">
+                    <div class="profile-icon" style="width: 40px; height: 40px; margin: 0;">
+                        <span style="color: var(--very-light-beige); font-size: 24px;">+</span>
+                    </div>
+                </button>
+            `;
+        } else {
+            accountControls.innerHTML = `
+                <button type="button" onclick="location.href='/login';">LOGIN</button>
+                <button type="button" onclick="location.href='/singup';">SIGNIN</button>
+            `;
+        }
+    } catch (error) {
+        console.error('Auth check error:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', checkAuthStatus);
+</script>
 </body>
 </html>
