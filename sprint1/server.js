@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const multer = require('multer');
 const app = express();
 
 const hostname = '127.0.0.1';
@@ -12,6 +13,52 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname)));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Update static file serving
+app.use('/js', express.static(path.join(__dirname, 'public/js')));
+
+// Add security headers middleware
+app.use((req, res, next) => {
+    res.setHeader(
+        'Content-Security-Policy',
+        "default-src 'self'; " +
+        "img-src 'self' data: blob:; " +
+        "script-src 'self' 'unsafe-inline'; " +
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+        "font-src 'self' https://fonts.gstatic.com; " +
+        "connect-src 'self'; " +
+        "frame-src 'none';"
+    );
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    next();
+});
+
+// Configure multer for file upload
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const uploadDir = path.join(__dirname, 'public', 'uploads');
+        if (!fs.existsSync(uploadDir)) {
+            fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 10 * 1024 * 1024 }, // Increased to 10MB
+    fileFilter: (req, file, cb) => {
+        if (!file.mimetype.startsWith('image/')) {
+            return cb(new Error('Only images are allowed'));
+        }
+        cb(null, true);
+    }
+});
 
 // Routes for HTML pages
 const pages = ['home', 'login', 'singup', 'account', 'menu', 'order'];
@@ -33,7 +80,19 @@ app.get('/auth/status', (req, res) => {
             const sessions = JSON.parse(fs.readFileSync(sessionPath, 'utf8'));
             const userSession = sessions[req.ip];
             if (userSession && userSession.expires > Date.now()) {
-                res.json({ loggedIn: true, user: userSession.user });
+                // Get user's profile image
+                const usersPath = path.join(__dirname, 'data', 'users.json');
+                const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
+                const user = users.find(u => 
+                    u.firstName === userSession.user.firstName && 
+                    u.lastName === userSession.user.lastName
+                );
+                
+                res.json({ 
+                    loggedIn: true, 
+                    user: userSession.user,
+                    profileImage: user?.profileImage || null
+                });
                 return;
             }
         }
@@ -171,6 +230,83 @@ app.post('/logout', (req, res) => {
     } catch (error) {
         console.error('Error during logout:', error);
         res.status(500).json({ error: "Error during logout" });
+    }
+});
+
+// Image upload endpoint with error handling
+app.post('/upload-profile-image', (req, res) => {
+    upload.single('profileImage')(req, res, function(err) {
+        if (err instanceof multer.MulterError) {
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ error: 'File size too large. Maximum size is 10MB.' });
+            }
+            return res.status(400).json({ error: err.message });
+        } else if (err) {
+            return res.status(400).json({ error: 'Error uploading file: ' + err.message });
+        }
+
+        // Continue with the rest of the upload logic
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        try {
+            const sessionPath = path.join(__dirname, 'data', 'sessions.json');
+            const sessions = JSON.parse(fs.readFileSync(sessionPath, 'utf8'));
+            const userSession = sessions[req.ip];
+
+            if (!userSession) {
+                return res.status(401).json({ error: 'Not authenticated' });
+            }
+
+            const imagePath = '/uploads/' + req.file.filename;
+            
+            // Update user's profile image in users.json
+            const usersPath = path.join(__dirname, 'data', 'users.json');
+            const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
+            const user = users.find(u => 
+                u.firstName === userSession.user.firstName && 
+                u.lastName === userSession.user.lastName
+            );
+
+            if (user) {
+                user.profileImage = imagePath;
+                fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+            }
+
+            res.json({ imagePath });
+        } catch (error) {
+            console.error('Error handling profile image:', error);
+            res.status(500).json({ error: 'Error updating profile image' });
+        }
+    });
+});
+
+app.get('/profile-image', (req, res) => {
+    try {
+        const sessionPath = path.join(__dirname, 'data', 'sessions.json');
+        const sessions = JSON.parse(fs.readFileSync(sessionPath, 'utf8'));
+        const userSession = sessions[req.ip];
+
+        if (!userSession) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        const usersPath = path.join(__dirname, 'data', 'users.json');
+        const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
+        const user = users.find(u => 
+            u.firstName === userSession.user.firstName && 
+            u.lastName === userSession.user.lastName
+        );
+
+        if (user && user.profileImage) {
+            res.json({ imagePath: user.profileImage });
+        } else {
+            res.json({ imagePath: null });
+        }
+    } catch (error) {
+        console.error('Error getting profile image:', error);
+        res.status(500).json({ error: 'Error getting profile image' });
     }
 });
 

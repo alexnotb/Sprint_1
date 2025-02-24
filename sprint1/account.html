@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Подключаем CSS-файл со стилями -->
   <link rel="stylesheet" href="main.css?v=1">
+  <script src="/js/auth.js" defer></script>
  
 </head>
 <body>
@@ -44,8 +45,9 @@
       <!-- Боковая панель (левый столбец) -->
       <aside class="left">
         <div class="settings-sidebar">
-          <div class="profile-icon">
-            <span>+</span>
+          <input type="file" id="profile-image" accept="image/*" style="display: none;">
+          <div class="profile-icon" onclick="document.getElementById('profile-image').click();" style="cursor: pointer;">
+            <span id="profile-icon-content">+</span>
           </div>
           <h3>Account picture</h3>
         </div>
@@ -81,18 +83,49 @@
     </div>
 </footer>
 <script>
-  async function checkAuthStatus() {
+// Load profile image on page load
+async function loadProfileImage() {
+    try {
+        const response = await fetch('/profile-image');
+        if (response.ok) {
+            const data = await response.json();
+            if (data.imagePath) {
+                // Update both profile icon and header icon
+                const profileIcon = document.getElementById('profile-icon-content');
+                const headerIcon = document.querySelector('.account-controls .profile-icon span');
+                const imageHtml = `<img src="${data.imagePath}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                
+                profileIcon.innerHTML = imageHtml;
+                if (headerIcon) {
+                    headerIcon.parentElement.innerHTML = imageHtml;
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error loading profile image:', error);
+    }
+}
+
+// Modify checkAuthStatus to include profile image
+async function checkAuthStatus() {
     try {
         const response = await fetch('/auth/status');
         const data = await response.json();
         const accountControls = document.querySelector('.account-controls');
         
         if (data.loggedIn) {
+            // Get profile image
+            const imageResponse = await fetch('/profile-image');
+            const imageData = await imageResponse.json();
+            const imageHtml = imageData.imagePath ? 
+                `<img src="${imageData.imagePath}" alt="Profile" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">` :
+                `<span style="color: var(--very-light-beige); font-size: 24px;">+</span>`;
+
             accountControls.innerHTML = `
                 <button type="button" onclick="location.href='/account';" 
                         style="background: none; border: none; cursor: pointer;">
                     <div class="profile-icon" style="width: 40px; height: 40px; margin: 0;">
-                        <span style="color: var(--very-light-beige); font-size: 24px;">+</span>
+                        ${imageHtml}
                     </div>
                 </button>
             `;
@@ -107,33 +140,52 @@
     }
 }
 
-document.addEventListener('DOMContentLoaded', checkAuthStatus);
+// Call both functions on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadProfileImage();
+    checkAuthStatus();
+});
 
-async function logoutUser() {
-    try {
-        const response = await fetch('/logout', { 
-            method: 'POST',
-            headers: {
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-                'Expires': '0'
-            }
-        });
-        if (response.ok) {
-            // Clear any client-side storage if used
-            sessionStorage.clear();
-            localStorage.clear();
-            
-            // Force reload home page to clear any cached state
-            window.location.replace('/');
-        } else {
-            alert('Logout failed');
-        }
-    } catch (error) {
-        console.error('Logout error:', error);
-        alert('Error during logout');
+// Update profile image upload handler
+document.getElementById('profile-image').addEventListener('change', async function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
     }
-}
+
+    const formData = new FormData();
+    formData.append('profileImage', file);
+
+    try {
+        const response = await fetch('/upload-profile-image', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error('Upload failed');
+        }
+
+        const result = await response.json();
+        
+        // Update both profile icon and header icon
+        const imageHtml = `<img src="${result.imagePath}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+        
+        document.getElementById('profile-icon-content').innerHTML = imageHtml;
+        
+        const headerIcon = document.querySelector('.account-controls .profile-icon');
+        if (headerIcon) {
+            headerIcon.innerHTML = imageHtml;
+        }
+
+    } catch (error) {
+        console.error('Upload error:', error);
+        alert('Error uploading image');
+    }
+});
 </script>
 </body>
 </html>
