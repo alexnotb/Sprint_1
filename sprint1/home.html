@@ -152,8 +152,12 @@ async function checkAuthStatus() {
         
         if (data.loggedIn) {
             accountControls.innerHTML = `
-                <span>Welcome, ${data.user.firstName}!</span>
-                <button type="button" onclick="logout()">LOGOUT</button>
+                <button type="button" onclick="location.href='/account';" 
+                        style="background: none; border: none; cursor: pointer;">
+                    <img src="/user-icon.png" alt="${data.user.firstName}" 
+                         style="width: 40px; height: 40px; border-radius: 50%; 
+                                object-fit: cover; background: #dce8d9;">
+                </button>
             `;
         } else {
             accountControls.innerHTML = `
@@ -164,11 +168,6 @@ async function checkAuthStatus() {
     } catch (error) {
         console.error('Auth check error:', error);
     }
-}
-
-async function logout() {
-    // Add logout functionality later
-    location.href = '/login';
 }
 
 document.addEventListener('DOMContentLoaded', checkAuthStatus);
