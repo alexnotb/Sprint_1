@@ -19,6 +19,33 @@
             width: 97%; /* растягивает контейнер на всю ширину окна */
             box-sizing: border-box; /* учитывает padding и border */
         }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown:hover .dropbtn {
+            background-color: #6F4F2C; /* Change hover color to #6F4F2C */
+        }
     </style>
 </head>
 <body>
@@ -51,9 +78,22 @@
 
     <div class="content-wrapper">
         <div class="container">
-            <h2 id="coffee-name">Name ☕</h2>
             <div class="dropdown">
-                <button>Size ▼</button>
+                <h2 id="coffee-name" class="dropbtn">Name ☕ ▼</h2>
+                <div class="dropdown-content">
+                    <a href="#" onclick="selectCoffee('Cappuccino')">Cappuccino</a>
+                    <a href="#" onclick="selectCoffee('Espresso')">Espresso</a>
+                    <a href="#" onclick="selectCoffee('Mocha')">Mocha</a>
+                    <a href="#" onclick="selectCoffee('Latte')">Latte</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="dropbtn" id="selected-size">Size ▼</button>
+                <div class="dropdown-content">
+                    <a href="#" onclick="selectSize('Small')">Small</a>
+                    <a href="#" onclick="selectSize('Medium')">Medium</a>
+                    <a href="#" onclick="selectSize('Large')">Large</a>
+                </div>
             </div>
             <div class="counter">
                 <button>Count</button>
@@ -99,6 +139,14 @@
             }
         }
 
+        function selectSize(size) {
+            document.getElementById('selected-size').innerText = size;
+        }
+
+        function selectCoffee(coffee) {
+            document.getElementById('coffee-name').innerText = coffee;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const coffeeName = urlParams.get('name');
@@ -137,4 +185,3 @@
     </script>
 </body>
 </html>
-
