@@ -279,13 +279,36 @@
 
         document.addEventListener('DOMContentLoaded', checkAuthStatus);
 
-        function calculatePrice(size) {
+        function calculatePrice(size, coffeeName) {
             const prices = {
+                'Cappuccino': {
+                    'Small': 1.00,
+                    'Medium': 2.00,
+                    'Large': 3.00
+                },
+                'Espresso': {
+                    'Small': 2.00,
+                    'Medium': 3.00,
+                    'Large': 4.00
+                },
+                'Mocha': {
+                    'Small': 3.00,
+                    'Medium': 4.00,
+                    'Large': 5.00
+                },
+                'Latte': {
+                    'Small': 2.00,
+                    'Medium': 3.00,
+                    'Large': 4.00
+                }
+            };
+
+            // Use default prices if coffee type not found
+            return prices[coffeeName]?.[size] || {
                 'Small': 2.50,
                 'Medium': 3.50,
                 'Large': 4.50
-            };
-            return prices[size] || 3.50;
+            }[size];
         }
 
         function showOrderSummary() {
@@ -294,7 +317,7 @@
             const count = document.getElementById('countValue').innerText;
             const sugar = document.getElementById('sugarValue').innerText;
             
-            const pricePerCup = calculatePrice(size);
+            const pricePerCup = calculatePrice(size, coffeeName);
             const totalPrice = pricePerCup * parseInt(count);
 
             const summaryHtml = `
