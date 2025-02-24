@@ -28,6 +28,10 @@
     "lastName": "3",
     "password": "4",
     "createdAt": "2025-02-24T17:34:18.458Z",
-    "profileImage": "/uploads/1740421361442-1365621.png"
+    "profileImage": "/uploads/1740421361442-1365621.png",
+    "orders": [
+      1740425679610,
+      1740425679612
+    ]
   }
 ]

@@ -373,6 +373,65 @@ app.post('/update-profile', (req, res) => {
     }
 });
 
+// Add orders endpoint
+app.post('/save-order', (req, res) => {
+    try {
+        const sessionPath = path.join(__dirname, 'data', 'sessions.json');
+        const sessions = JSON.parse(fs.readFileSync(sessionPath, 'utf8'));
+        const userSession = sessions[req.ip];
+
+        if (!userSession) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        const { order } = req.body;
+        const ordersDir = path.join(__dirname, 'data', 'orders');
+        
+        // Create orders directory if it doesn't exist
+        if (!fs.existsSync(ordersDir)) {
+            fs.mkdirSync(ordersDir, { recursive: true });
+        }
+
+        // Get user data for the order
+        const usersPath = path.join(__dirname, 'data', 'users.json');
+        const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
+        const user = users.find(u => 
+            u.firstName === userSession.user.firstName && 
+            u.lastName === userSession.user.lastName
+        );
+
+        // Create order object
+        const orderData = {
+            orderId: Date.now(),
+            timestamp: new Date().toISOString(),
+            user: {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                profileImage: user.profileImage || null
+            },
+            orderDetails: order
+        };
+
+        // Save order to a new file
+        const orderPath = path.join(ordersDir, `order_${orderData.orderId}.json`);
+        fs.writeFileSync(orderPath, JSON.stringify(orderData, null, 2));
+
+        // Add order to user's history
+        if (!user.orders) user.orders = [];
+        user.orders.push(orderData.orderId);
+        fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+
+        res.json({ 
+            message: 'Order saved successfully', 
+            orderId: orderData.orderId 
+        });
+
+    } catch (error) {
+        console.error('Error saving order:', error);
+        res.status(500).json({ error: 'Error saving order' });
+    }
+});
+
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });

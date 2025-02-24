@@ -351,8 +351,39 @@
                     return;
                 }
 
-                // Here you would typically send the order to your server
-                alert('Order confirmed! Thank you for your purchase.');
+                // Gather order details
+                const coffeeName = document.getElementById('coffee-name').innerText;
+                const sizeInfo = document.getElementById('selected-size').innerText.split(' - ');
+                const size = sizeInfo[0];
+                const price = parseFloat(sizeInfo[1].replace('$', ''));
+                const quantity = parseInt(document.getElementById('countValue').innerText);
+                const sugar = parseInt(document.getElementById('sugarValue').innerText);
+                
+                const orderDetails = {
+                    item: coffeeName,
+                    size: size,
+                    pricePerUnit: price,
+                    quantity: quantity,
+                    sugar: sugar,
+                    totalPrice: price * quantity,
+                    status: 'pending'
+                };
+
+                // Save the order
+                const saveResponse = await fetch('/save-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ order: orderDetails })
+                });
+
+                if (!saveResponse.ok) {
+                    throw new Error('Failed to save order');
+                }
+
+                const result = await saveResponse.json();
+                alert(`Order #${result.orderId} confirmed! Thank you for your purchase.`);
                 closeModal();
                 window.location.href = '/';
             } catch (error) {
