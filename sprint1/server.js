@@ -14,6 +14,18 @@ app.use(express.static(path.join(__dirname)));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Add this near the top with other middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Add request logging middleware
+app.use((req, res, next) => {
+    if (req.path === '/register') {
+        console.log('Register request body:', req.body);
+    }
+    next();
+});
+
 // Update static file serving
 app.use('/js', express.static(path.join(__dirname, 'public/js')));
 
@@ -156,13 +168,16 @@ app.post('/login', (req, res) => {
 
 // Registration endpoint
 app.post('/register', async (req, res) => {
-    const { firstName, lastName, password } = req.body;
-
-    if (!firstName || !lastName || !password) {
-        return res.status(400).json({ error: "All fields are required" });
-    }
-
+    console.log('Received registration request:', req.body);
+    
     try {
+        const { firstName, lastName, password } = req.body;
+
+        // Basic validation
+        if (!firstName || !lastName || !password) {
+            return res.status(400).json({ error: "All fields are required" });
+        }
+
         // Ensure data directory exists
         const dataDir = path.join(__dirname, 'data');
         const usersPath = path.join(dataDir, 'users.json');
@@ -171,54 +186,35 @@ app.post('/register', async (req, res) => {
             fs.mkdirSync(dataDir, { recursive: true });
         }
 
-        // Read existing users or create new array
+        // Read or initialize users array
         let users = [];
         if (fs.existsSync(usersPath)) {
-            try {
-                const data = fs.readFileSync(usersPath, 'utf8');
-                users = JSON.parse(data);
-                if (!Array.isArray(users)) {
-                    users = [];
-                }
-            } catch (error) {
-                console.error('Error reading users file:', error);
-                users = [];
-            }
+            const data = fs.readFileSync(usersPath, 'utf8');
+            users = JSON.parse(data);
         }
 
-        // Check if user exists with case-insensitive comparison
-        const userExists = users.some(user => 
-            user.firstName.toLowerCase() === firstName.toLowerCase() && 
-            user.lastName.toLowerCase() === lastName.toLowerCase()
-        );
-
-        if (userExists) {
-            return res.status(400).json({ 
-                error: "User already exists. Please choose a different name or login." 
-            });
-        }
-
-        // Add new user with initial orders array
+        // Create new user
         const newUser = {
             firstName,
             lastName,
             password,
             createdAt: new Date().toISOString(),
-            orders: [],
-            profileImage: null
+            orders: []
         };
 
         users.push(newUser);
         fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
-        
+
         res.status(201).json({ 
-            message: "User registered successfully",
-            alertMessage: "User registered successfully",
+            message: "Registration successful",
             redirect: "/login"
         });
+
     } catch (error) {
         console.error('Registration error:', error);
-        res.status(500).json({ error: "Error registering user" });
+        res.status(500).json({ 
+            error: "Server error during registration"
+        });
     }
 });
 
