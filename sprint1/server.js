@@ -22,12 +22,12 @@ app.use((req, res, next) => {
     res.setHeader(
         'Content-Security-Policy',
         "default-src 'self'; " +
-        "img-src 'self' data: blob:; " +
-        "script-src 'self' 'unsafe-inline'; " +
+        "img-src 'self' data: blob: *.google.com *.googleapis.com; " +
+        "script-src 'self' 'unsafe-inline' *.googleapis.com *.google.com; " +
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
         "font-src 'self' https://fonts.gstatic.com; " +
-        "connect-src 'self'; " +
-        "frame-src 'none';"
+        "frame-src 'self' *.google.com; " + // Allow Google Maps iframes
+        "connect-src 'self' *.google.com *.googleapis.com;"
     );
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
