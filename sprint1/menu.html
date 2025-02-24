@@ -47,15 +47,13 @@
       display: flex;            
       flex-direction: column;
       justify-content: center;  /* Центрируем текст по вертикали */
+      text-align: center;       /* Центрируем текст по горизонтали */
     }
 
     .coffee-text h2 {
       margin: 0 0 10px;         /* Отступ снизу у заголовка */
       font-size: 20px;
       color: var(--dark-brown);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
     .coffee-text p {
@@ -63,13 +61,6 @@
       line-height: 1.4;
       font-size: 14px;
       color: var(--medium-brown);
-    }
-
-    .coffee-text .price {
-      font-size: 16px;
-      font-weight: bold;
-      color: var(--dark-brown);
-      margin-left: 10px; /* Отступ слева для выравнивания */
     }
 
     /* Блок с картинкой (справа) */
@@ -134,18 +125,17 @@
 </footer>
   <script>
     class CoffeeCard {
-        constructor(name, description, imageUrl, price) {
+        constructor(name, description, imageUrl) {
             this.name = name;
             this.description = description;
             this.imageUrl = imageUrl;
-            this.price = price;
         }
         
         render() {
             return `
                 <div class="coffee-card">
                     <div class="coffee-text">
-                        <h2>${this.name} <span class="price">$${this.price}</span></h2>
+                        <h2>${this.name}</h2>
                         <p>${this.description}</p>
                     </div>
                     <a href="/order?name=${encodeURIComponent(this.name)}" class="coffee-image">
@@ -160,33 +150,29 @@
         {
             name: 'Cappuccino',
             description: 'A classic blend of bold espresso and velvety milk foam. Every sip is a harmony of taste and texture, wrapping you in warmth and comfort.',
-            imageUrl: ' /cappuccino.jpg',
-            price: 1
+            imageUrl: ' /cappuccino.jpg'
         },
         {
             name: 'Espresso',
             description: 'A small cup packed with bold energy. This rich, intense drink is the essence of true coffee craftsmanship, inspiring from the very first sip.',
-            imageUrl: '/espresso.jpg',
-            price: 2
+            imageUrl: '/espresso.jpg'
         },
         {
             name: 'Mocha',
             description: 'A rich fusion of espresso, chocolate, and milk, creating a decadent treat for the senses. Sweet and bold, it\'s a moment of indulgence in every sip.',
-            imageUrl: '/mocha.jpg',
-            price: 3
+            imageUrl: '/mocha.jpg'
         },
         {
             name: 'Latte',
             description: 'Smooth and soothing, a latte is the perfect balance of robust espresso and creamy frothed milk. A gentle invitation to savor life\'s little pleasures.',
-            imageUrl: '/latte.jpg',
-            price: 4
+            imageUrl: '/latte.jpg'
         }
     ];
 
     document.addEventListener('DOMContentLoaded', () => {
         const container = document.querySelector('.cards-container');
         container.innerHTML = coffeeData
-            .map(data => new CoffeeCard(data.name, data.description, data.imageUrl, data.price).render())
+            .map(data => new CoffeeCard(data.name, data.description, data.imageUrl).render())
             .join('');
     });
 

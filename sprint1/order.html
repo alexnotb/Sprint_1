@@ -135,10 +135,8 @@
             </div>
             <div class="dropdown">
                 <button class="dropbtn" id="selected-size">Size ▼</button>
-                <div class="dropdown-content">
-                    <a href="#" onclick="selectSize('Small', 2.50)">Small - $2.50</a>
-                    <a href="#" onclick="selectSize('Medium', 3.50)">Medium - $3.50</a>
-                    <a href="#" onclick="selectSize('Large', 4.50)">Large - $4.50</a>
+                <div class="dropdown-content" id="size-options">
+                    <!-- Size options will be inserted here -->
                 </div>
             </div>
             <div class="counter">
@@ -210,13 +208,46 @@
 
         function selectCoffee(coffee) {
             document.getElementById('coffee-name').innerText = coffee;
+            let sizeOptions = '';
+            if (coffee === 'Cappuccino') {
+                sizeOptions = `
+                    <a href="#" onclick="selectSize('Small', 1.00)">Small - $1.00</a>
+                    <a href="#" onclick="selectSize('Medium', 2.00)">Medium - $2.00</a>
+                    <a href="#" onclick="selectSize('Large', 3.00)">Large - $3.00</a>
+                `;
+            } else if (coffee === 'Espresso') {
+                sizeOptions = `
+                    <a href="#" onclick="selectSize('Small', 2.00)">Small - $2.00</a>
+                    <a href="#" onclick="selectSize('Medium', 3.00)">Medium - $3.00</a>
+                    <a href="#" onclick="selectSize('Large', 4.00)">Large - $4.00</a>
+                `;
+            } else if (coffee === 'Mocha') {
+                sizeOptions = `
+                    <a href="#" onclick="selectSize('Small', 3.00)">Small - $3.00</a>
+                    <a href="#" onclick="selectSize('Medium', 4.00)">Medium - $4.00</a>
+                    <a href="#" onclick="selectSize('Large', 5.00)">Large - $5.00</a>
+                `;
+            } else if (coffee === 'Latte') {
+                sizeOptions = `
+                    <a href="#" onclick="selectSize('Small', 2.00)">Small - $2.00</a>
+                    <a href="#" onclick="selectSize('Medium', 3.00)">Medium - $3.00</a>
+                    <a href="#" onclick="selectSize('Large', 4.00)">Large - $4.00</a>
+                `;
+            } else {
+                sizeOptions = `
+                    <a href="#" onclick="selectSize('Small', 2.50)">Small - $2.50</a>
+                    <a href="#" onclick="selectSize('Medium', 3.50)">Medium - $3.50</a>
+                    <a href="#" onclick="selectSize('Large', 4.50)">Large - $4.50</a>
+                `;
+            }
+            document.getElementById('size-options').innerHTML = sizeOptions;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const coffeeName = urlParams.get('name');
             if (coffeeName) {
-                document.getElementById('coffee-name').innerText = coffeeName;
+                selectCoffee(coffeeName);
             }
         });
 
