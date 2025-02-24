@@ -1,0 +1,18 @@
+{
+  "orderId": 1740426983605,
+  "timestamp": "2025-02-24T19:56:23.605Z",
+  "user": {
+    "firstName": "Oleksii",
+    "lastName": "1",
+    "profileImage": null
+  },
+  "orderDetails": {
+    "item": "Cappuccino",
+    "size": "Medium",
+    "pricePerUnit": 2,
+    "quantity": 10,
+    "sugar": 1,
+    "totalPrice": 20,
+    "status": "pending"
+  }
+}
