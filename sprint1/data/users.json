@@ -35,5 +35,12 @@
     "password": "3",
     "createdAt": "2025-02-24T17:34:18.458Z",
     "profileImage": "/uploads/1740418912606-1311994.jpeg"
+  },
+  {
+    "firstName": "Alexey",
+    "lastName": "Bez",
+    "password": "1",
+    "createdAt": "2025-02-24T17:54:44.604Z",
+    "profileImage": "/uploads/1740419715751-Screenshot 2025-01-22 105638.png"
   }
 ]
