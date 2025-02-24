@@ -1,112 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coffee Shop</title>
-    <link rel="stylesheet" href="main.css?v=1">
-    <script src="/js/auth.js" defer></script>
-    <style>
-      
-html, body {
-    max-width: 100%;
-    overflow-x: hidden;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coffee Shop</title>
+  <link rel="stylesheet" href="main.css?v=1">
+  <script src="/js/auth.js" defer></script>
+  <style>
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
 
-.container {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(300px, 1fr)); /* Две колонки */
-  gap: 20px;
-  justify-content: center;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
-}
+    .container {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(300px, 1fr)); /* Two columns */
+      gap: 20px;
+      justify-content: center;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      box-sizing: border-box;
+    }
 
-
-    /* Стили для карточки с изображением */
+    /* Styles for the image card */
     .card.image {
-      padding: 0; /* Убираем отступы, чтобы изображение занимало весь контейнер */
-      border: none; /* Если не нужна рамка, можно убрать */
+      padding: 0; /* Remove padding so the image fills the container */
+      border: none; /* Remove border if not needed */
       display: block;
       width: 100%;
       height: 373px; /* Match the card height */
       overflow: hidden;
     }
 
-.card.image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-@media (max-width: 768px) {
-    .container {
-        grid-template-columns: 1fr; /* Одна карточка на строку */
-        padding: 10px; /* Уменьшаем отступы для меньших экранов */
+    .card.image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
-}
 
-
-/* Общий стиль для каждой карточки */
-.card {
-  width: 100%;
-  max-width: 600px;
-  height: 373px;
-  display: flex;
-  background-color: var(--minty-pastel-green);
-  border: 1px solid var(--medium-brown);
-  border-radius: 20px;
-  overflow: hidden;
-  box-sizing: border-box;
-  font-family: sans-serif;
-}
-
-/* Медиа-запрос для мобильных устройств (ширина экрана до 768px) */
-@media (max-width: 768px) {
-  .container {
-    grid-template-columns: 1fr; /* Одна карточка на строку */
-  }
-}
-      /* Блок с текстом (слева) */
-      .text {
-        flex: 1;                  /* Занимает всё доступное пространство, кроме картинки */
-        padding: 15px;            /* Внутренние отступы */
-        display: flex;            
-        flex-direction: column;
-        justify-content: center;  /* Центрируем текст по вертикали */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr; /* One card per row */
+        padding: 10px; /* Reduce padding for smaller screens */
       }
+    }
 
-    </style>
+    /* General style for each card */
+    .card {
+      width: 100%;
+      max-width: 600px;
+      height: 373px;
+      display: flex;
+      background-color: var(--minty-pastel-green);
+      border: 1px solid var(--medium-brown);
+      border-radius: 20px;
+      overflow: hidden;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+
+    /* Media query for mobile devices (screen width up to 768px) */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr; /* One card per row */
+      }
+    }
+
+    /* Text block (on the left) */
+    .text {
+      flex: 1; /* Occupies all available space except for the image */
+      padding: 15px; /* Inner padding */
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* Vertically center the text */
+    }
+  </style>
 </head>
 <body>
   <header>
     <div class="header-container">
       <div class="content-wrapper">
-      <div class="header-container">
-        <img src="/logo.jpg" alt="Логотип" class="logo">
-        
-        <input type="checkbox" id="nav-toggle">
-        <label for="nav-toggle" class="hamburger-menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </label>
-    
-        <nav class="nav-links">
-          <a href="/order">ORDER</a>
-          <a href="/menu">MENU</a>
-        </nav>
-    
-        <div class="account-controls">
-          <button type="button" onclick="location.href='/login';">LOGIN</button>
-          <button type="button" onclick="location.href='/singup';">SIGNIN</button>
+        <div class="header-container">
+          <img src="/logo.jpg" alt="Logo" class="logo">
+          
+          <input type="checkbox" id="nav-toggle">
+          <label for="nav-toggle" class="hamburger-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </label>
+      
+          <nav class="nav-links">
+            <a href="/order">ORDER</a>
+            <a href="/menu">MENU</a>
+          </nav>
+      
+          <div class="account-controls">
+            <button type="button" onclick="location.href='/login';">LOGIN</button>
+            <button type="button" onclick="location.href='/signup';">SIGN UP</button>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   </header>
     
@@ -115,62 +112,61 @@ html, body {
       <div class="content-wrapper">
         <div class="container">
           <div class="card text">
-            <h2>Добро пожаловать в нашу кофейню!</h2>
-            <p>Добро пожаловать в нашу уютную кофейню! Здесь каждая чашка кофе — результат тщательного отбора зёрен и искренней заботы о наших гостях. Мы верим, что ароматный напиток способен не только взбодрить, но и объединить, поэтому мы стремимся создать атмосферу, к которой хочется возвращаться снова и снова.</p>
+            <h2>Welcome to Our Coffee Shop!</h2>
+            <p>Welcome to our cozy coffee shop! Here, every cup of coffee is the result of carefully selected beans and genuine care for our guests. We believe that a fragrant drink can not only energize you but also bring people together, which is why we strive to create an atmosphere that invites you to return time and again.</p>
           </div>
           <div class="card image">
-            <img src="/coffeeshop.png" alt="Интерьер кофейни">
+            <img src="/coffeeshop.png" alt="Coffee Shop Interior">
           </div>
           <div class="card image">
-            <img src="/3cups.jpg" alt="Кофейные напитки">
+            <img src="/3cups.jpg" alt="Coffee Drinks">
           </div>
           <div class="card text">
-            <h2>Наше меню</h2>
-            <p>В нашем меню представлены классический эспрессо и капучино, а также фирменные рецепты, вдохновлённые лучшими кофейными традициями мира. Наслаждайтесь мягкими звуками джаза, погружайтесь в неспешные беседы и дарите себе время для наслаждения моментом — ведь настоящий кофейный перерыв начинается именно здесь.</p>
+            <h2>Our Menu</h2>
+            <p>Our menu features classic espresso and cappuccino, as well as our signature recipes inspired by the world's best coffee traditions. Enjoy the soothing sounds of jazz, engage in leisurely conversations, and take time to savor the moment — because a true coffee break starts right here.</p>
           </div>
         </div>
       </div>
     </div>
   </main>
   
-  
-
-    <footer>
-      <div class="content-wrapper">
-        <div class="blok">
-          <a class="email" href="mailto:EXAMPLE@GMAIL.COM">EXAMPLE@GMAIL.COM</a>
-          <a class="number" href="tel:+123456789">Contact: +123456789</a>
-        </div>
+  <footer>
+    <div class="content-wrapper">
+      <div class="blok">
+        <a class="email" href="mailto:EXAMPLE@GMAIL.COM">EXAMPLE@GMAIL.COM</a>
+        <a class="number" href="tel:+123456789">Contact: +123456789</a>
       </div>
+    </div>
   </footer>
-    <script>
-async function checkAuthStatus() {
-    try {
+  
+  <script>
+    async function checkAuthStatus() {
+      try {
         const response = await fetch('/auth/status');
         const data = await response.json();
         const accountControls = document.querySelector('.account-controls');
         
         if (data.loggedIn) {
-            accountControls.innerHTML = `
-                <button type="button" onclick="location.href='/account';" 
-                        style="background: none; border: none; cursor: pointer;">
-                    <div class="profile-icon" style="width: 40px; height: 40px; margin: 0;">
-                        <span style="color: var(--very-light-beige); font-size: 24px;">+</span>
-                    </div>
-                </button>
-            `;
+          accountControls.innerHTML = `
+            <button type="button" onclick="location.href='/account';" 
+                    style="background: none; border: none; cursor: pointer;">
+              <div class="profile-icon" style="width: 40px; height: 40px; margin: 0;">
+                <span style="color: var(--very-light-beige); font-size: 24px;">+</span>
+              </div>
+            </button>
+          `;
         } else {
-            accountControls.innerHTML = `
-                <button type="button" onclick="location.href='/login';">LOGIN</button>
-                <button type="button" onclick="location.href='/singup';">SIGNIN</button>
-            `;
+          accountControls.innerHTML = `
+            <button type="button" onclick="location.href='/login';">LOGIN</button>
+            <button type="button" onclick="location.href='/signup';">SIGN UP</button>
+          `;
         }
-    } catch (error) {
+      } catch (error) {
         console.error('Auth check error:', error);
+      }
     }
-}
 
-document.addEventListener('DOMContentLoaded', checkAuthStatus);
-</script>
+    document.addEventListener('DOMContentLoaded', checkAuthStatus);
+  </script>
 </body>
 </html>
