@@ -190,23 +190,35 @@ app.post('/register', async (req, res) => {
             }
         }
 
-        // Check if user already exists
-        if (users.some(user => user.firstName === firstName && user.lastName === lastName)) {
-            return res.status(400).json({ error: "User already exists" });
+        // Check if user exists with case-insensitive comparison
+        const userExists = users.some(user => 
+            user.firstName.toLowerCase() === firstName.toLowerCase() && 
+            user.lastName.toLowerCase() === lastName.toLowerCase()
+        );
+
+        if (userExists) {
+            return res.status(400).json({ 
+                error: "User already exists. Please choose a different name or login." 
+            });
         }
 
-        // Add new user
+        // Add new user with initial orders array
         const newUser = {
             firstName,
             lastName,
             password,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            orders: [],
+            profileImage: null
         };
 
         users.push(newUser);
         fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
         
-        res.status(201).json({ message: "User registered successfully" });
+        res.status(201).json({ 
+            message: "User registered successfully",
+            redirect: "/login"
+        });
     } catch (error) {
         console.error('Registration error:', error);
         res.status(500).json({ error: "Error registering user" });
