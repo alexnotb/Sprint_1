@@ -126,84 +126,85 @@
     </div>
 </footer>
   <script>
-        class CoffeeCard {
-            constructor(name, description, imageUrl) {
-                this.name = name;
-                this.description = description;
-                this.imageUrl = imageUrl;
-            }
-            
-            render() {
-                return `
-                    <div class="coffee-card">
-                        <div class="coffee-text">
-                            <h2>${this.name}</h2>
-                            <p>${this.description}</p>
-                        </div>
-                        <div class="coffee-image">
-                            <img src="${this.imageUrl}" alt="${this.name}">
-                        </div>
+    class CoffeeCard {
+        constructor(name, description, imageUrl) {
+            this.name = name;
+            this.description = description;
+            this.imageUrl = imageUrl;
+        }
+        
+        render() {
+            return `
+                <a href="/order" class="coffee-card">
+                    <div class="coffee-text">
+                        <h2>${this.name}</h2>
+                        <p>${this.description}</p>
                     </div>
+                    <div class="coffee-image">
+                        <img src="${this.imageUrl}" alt="${this.name}">
+                    </div>
+                </a>
+            `;
+        }
+    }
+
+    const coffeeData = [
+        {
+            name: 'Cappuccino',
+            description: 'A classic blend of bold espresso and velvety milk foam. Every sip is a harmony of taste and texture, wrapping you in warmth and comfort.',
+            imageUrl: ' /cappuccino.jpg'
+        },
+        {
+            name: 'Espresso',
+            description: 'A small cup packed with bold energy. This rich, intense drink is the essence of true coffee craftsmanship, inspiring from the very first sip.',
+            imageUrl: '/espresso.jpg'
+        },
+        {
+            name: 'Mocha',
+            description: 'A rich fusion of espresso, chocolate, and milk, creating a decadent treat for the senses. Sweet and bold, it\'s a moment of indulgence in every sip.',
+            imageUrl: '/mocha.jpg'
+        },
+        {
+            name: 'Latte',
+            description: 'Smooth and soothing, a latte is the perfect balance of robust espresso and creamy frothed milk. A gentle invitation to savor life\'s little pleasures.',
+            imageUrl: '/latte.jpg'
+        }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.querySelector('.cards-container');
+        container.innerHTML = coffeeData
+            .map(data => new CoffeeCard(data.name, data.description, data.imageUrl).render())
+            .join('');
+    });
+
+    async function checkAuthStatus() {
+        try {
+            const response = await fetch('/auth/status');
+            const data = await response.json();
+            const accountControls = document.querySelector('.account-controls');
+            
+            if (data.loggedIn) {
+                accountControls.innerHTML = `
+                    <button type="button" onclick="location.href='/account';" 
+                            style="background: none; border: none; cursor: pointer;">
+                        <div class="profile-icon" style="width: 40px; height: 40px; margin: 0;">
+                            <span style="color: var(--very-light-beige); font-size: 24px;">+</span>
+                        </div>
+                    </button>
+                `;
+            } else {
+                accountControls.innerHTML = `
+                    <button type="button" onclick="location.href='/login';">LOGIN</button>
+                    <button type="button" onclick="location.href='/singup';">SIGNIN</button>
                 `;
             }
+        } catch (error) {
+            console.error('Auth check error:', error);
         }
-
-        const coffeeData = [
-            {
-                name: 'Cappuccino',
-                description: 'A classic blend of bold espresso and velvety milk foam. Every sip is a harmony of taste and texture, wrapping you in warmth and comfort.',
-                imageUrl: ' /cappuccino.jpg'
-            },
-            {
-                name: 'Espresso',
-                description: 'A small cup packed with bold energy. This rich, intense drink is the essence of true coffee craftsmanship, inspiring from the very first sip.',
-                imageUrl: '/espresso.jpg'
-            },
-            {
-                name: 'Mocha',
-                description: 'A rich fusion of espresso, chocolate, and milk, creating a decadent treat for the senses. Sweet and bold, it\'s a moment of indulgence in every sip.',
-                imageUrl: '/mocha.jpg'
-            },
-            {
-                name: 'Latte',
-                description: 'Smooth and soothing, a latte is the perfect balance of robust espresso and creamy frothed milk. A gentle invitation to savor life\'s little pleasures.',
-                imageUrl: '/latte.jpg'
-            }
-        ];
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.querySelector('.cards-container');
-            container.innerHTML = coffeeData
-                .map(data => new CoffeeCard(data.name, data.description, data.imageUrl).render())
-                .join('');
-        });
-        async function checkAuthStatus() {
-    try {
-        const response = await fetch('/auth/status');
-        const data = await response.json();
-        const accountControls = document.querySelector('.account-controls');
-        
-        if (data.loggedIn) {
-            accountControls.innerHTML = `
-                <button type="button" onclick="location.href='/account';" 
-                        style="background: none; border: none; cursor: pointer;">
-                    <div class="profile-icon" style="width: 40px; height: 40px; margin: 0;">
-                        <span style="color: var(--very-light-beige); font-size: 24px;">+</span>
-                    </div>
-                </button>
-            `;
-        } else {
-            accountControls.innerHTML = `
-                <button type="button" onclick="location.href='/login';">LOGIN</button>
-                <button type="button" onclick="location.href='/singup';">SIGNIN</button>
-            `;
-        }
-    } catch (error) {
-        console.error('Auth check error:', error);
     }
-}
 
-document.addEventListener('DOMContentLoaded', checkAuthStatus);
+    document.addEventListener('DOMContentLoaded', checkAuthStatus);
   </script>
 </body> 
 </html>
