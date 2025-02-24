@@ -384,21 +384,28 @@ app.post('/save-order', (req, res) => {
             return res.status(401).json({ error: 'Not authenticated' });
         }
 
-        const { order } = req.body;
-        const ordersDir = path.join(__dirname, 'data', 'orders');
+        // Create necessary directories
+        const dataDir = path.join(__dirname, 'data');
+        const ordersDir = path.join(dataDir, 'orders');
         
-        // Create orders directory if it doesn't exist
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir, { recursive: true });
+        }
         if (!fs.existsSync(ordersDir)) {
             fs.mkdirSync(ordersDir, { recursive: true });
         }
 
-        // Get user data for the order
-        const usersPath = path.join(__dirname, 'data', 'users.json');
+        // Get user data
+        const usersPath = path.join(dataDir, 'users.json');
         const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
         const user = users.find(u => 
             u.firstName === userSession.user.firstName && 
             u.lastName === userSession.user.lastName
         );
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
 
         // Create order object
         const orderData = {
@@ -409,19 +416,22 @@ app.post('/save-order', (req, res) => {
                 lastName: user.lastName,
                 profileImage: user.profileImage || null
             },
-            orderDetails: order
+            orderDetails: req.body.order
         };
 
-        // Save order to a new file
+        // Save order to file
         const orderPath = path.join(ordersDir, `order_${orderData.orderId}.json`);
         fs.writeFileSync(orderPath, JSON.stringify(orderData, null, 2));
 
-        // Add order to user's history
-        if (!user.orders) user.orders = [];
+        // Update user's orders array
+        if (!user.orders) {
+            user.orders = [];
+        }
         user.orders.push(orderData.orderId);
         fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
 
-        res.json({ 
+        // Send success response
+        res.status(201).json({ 
             message: 'Order saved successfully', 
             orderId: orderData.orderId 
         });
