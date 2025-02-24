@@ -70,8 +70,13 @@
 
       const result = await response.json();
       if (response.ok) {
-        alert(result.message);
-        window.location.href = '/home'; // Redirect to home page
+        const authCheck = await fetch('/auth/status');
+        const authData = await authCheck.json();
+        if (authData.loggedIn) {
+            window.location.href = '/home';
+        } else {
+            alert('Login successful but session not created');
+        }
       } else {
         alert(result.error);
       }
