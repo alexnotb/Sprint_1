@@ -91,13 +91,15 @@
             
             if (response.ok) {
                 alert(result.message);
-                window.location.href = "/login";
+                if (result.redirect) {
+                    window.location.href = result.redirect;
+                }
             } else {
-                throw new Error(result.error || "Registration failed");
+                throw new Error(result.error);
             }
         } catch (error) {
             console.error('Registration error:', error);
-            alert(error.message || "Error during registration");
+            alert(error.message || "Error during registration. Please try again.");
         }
     });
   </script>
