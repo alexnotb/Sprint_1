@@ -136,9 +136,9 @@
             <div class="dropdown">
                 <button class="dropbtn" id="selected-size">Size ▼</button>
                 <div class="dropdown-content">
-                    <a href="#" onclick="selectSize('Small')">Small</a>
-                    <a href="#" onclick="selectSize('Medium')">Medium</a>
-                    <a href="#" onclick="selectSize('Large')">Large</a>
+                    <a href="#" onclick="selectSize('Small', 2.50)">Small - $2.50</a>
+                    <a href="#" onclick="selectSize('Medium', 3.50)">Medium - $3.50</a>
+                    <a href="#" onclick="selectSize('Large', 4.50)">Large - $4.50</a>
                 </div>
             </div>
             <div class="counter">
@@ -204,8 +204,8 @@
             }
         }
 
-        function selectSize(size) {
-            document.getElementById('selected-size').innerText = size;
+        function selectSize(size, price) {
+            document.getElementById('selected-size').innerText = `${size} - $${price.toFixed(2)}`;
         }
 
         function selectCoffee(coffee) {
@@ -259,7 +259,7 @@
 
         function showOrderSummary() {
             const coffeeName = document.getElementById('coffee-name').innerText;
-            const size = document.getElementById('selected-size').innerText;
+            const size = document.getElementById('selected-size').innerText.split(' - ')[0];
             const count = document.getElementById('countValue').innerText;
             const sugar = document.getElementById('sugarValue').innerText;
             
