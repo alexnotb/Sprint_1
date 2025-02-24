@@ -84,10 +84,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'home.html'));
 });
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'home.html'));
-});
-
 // Auth status endpoint
 app.get('/auth/status', (req, res) => {
     const sessionPath = path.join(__dirname, 'data', 'sessions.json');
