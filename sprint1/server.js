@@ -81,6 +81,25 @@ app.post('/register', (req, res) => {
     }
 });
 
+// Add auth status endpoint
+app.get('/auth/status', (req, res) => {
+    const sessionPath = path.join(__dirname, 'data', 'sessions.json');
+    try {
+        if (fs.existsSync(sessionPath)) {
+            const sessions = JSON.parse(fs.readFileSync(sessionPath, 'utf8'));
+            const userSession = sessions[req.ip];
+            if (userSession && userSession.expires > Date.now()) {
+                res.json({ loggedIn: true, user: userSession.user });
+                return;
+            }
+        }
+        res.json({ loggedIn: false });
+    } catch (error) {
+        console.error('Error checking auth status:', error);
+        res.status(500).json({ error: "Error checking authentication" });
+    }
+});
+
 // Add login endpoint
 app.post('/login', (req, res) => {
     const { firstName, lastName, password } = req.body;
@@ -103,7 +122,23 @@ app.post('/login', (req, res) => {
         const user = users.find(u => u.firstName === firstName && u.lastName === lastName && u.password === password);
 
         if (user) {
-            res.status(200).json({ message: "User logged in successfully" });
+            // Create session
+            const sessionPath = path.join(__dirname, 'data', 'sessions.json');
+            try {
+                let sessions = {};
+                if (fs.existsSync(sessionPath)) {
+                    sessions = JSON.parse(fs.readFileSync(sessionPath, 'utf8'));
+                }
+                sessions[req.ip] = {
+                    user: { firstName: user.firstName, lastName: user.lastName },
+                    expires: Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+                };
+                fs.writeFileSync(sessionPath, JSON.stringify(sessions, null, 2));
+                res.status(200).json({ message: "User logged in successfully" });
+            } catch (error) {
+                console.error('Error creating session:', error);
+                res.status(500).json({ error: "Error logging in user" });
+            }
         } else {
             res.status(401).json({ error: "Invalid credentials" });
         }

@@ -143,5 +143,35 @@ html, body {
       </div>
   </footer>
     <script src="/sprint1/pages/accaunt.js"></script>
+    <script>
+async function checkAuthStatus() {
+    try {
+        const response = await fetch('/auth/status');
+        const data = await response.json();
+        const accountControls = document.querySelector('.account-controls');
+        
+        if (data.loggedIn) {
+            accountControls.innerHTML = `
+                <span>Welcome, ${data.user.firstName}!</span>
+                <button type="button" onclick="logout()">LOGOUT</button>
+            `;
+        } else {
+            accountControls.innerHTML = `
+                <button type="button" onclick="location.href='/login';">LOGIN</button>
+                <button type="button" onclick="location.href='/singup';">SIGNIN</button>
+            `;
+        }
+    } catch (error) {
+        console.error('Auth check error:', error);
+    }
+}
+
+async function logout() {
+    // Add logout functionality later
+    location.href = '/login';
+}
+
+document.addEventListener('DOMContentLoaded', checkAuthStatus);
+</script>
 </body>
 </html>
