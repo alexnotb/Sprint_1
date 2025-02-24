@@ -46,6 +46,52 @@
         .dropdown:hover .dropbtn {
             background-color: #6F4F2C; /* Change hover color to #6F4F2C */
         }
+
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-container {
+            background-color: #DDEAE1;
+            border: 1px solid #3A2A1A;
+            border-radius: 20px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+
+        .order-details {
+            margin: 20px 0;
+        }
+
+        .order-details p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .total-price {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 20px;
+            border-top: 1px solid #3A2A1A;
+            padding-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -111,7 +157,26 @@
                     <button onclick="increaseCount('sugarValue')">+</button>
                 </div>
             </div>
-            <button class="next-button">Next</button>
+            <button class="next-button" onclick="showOrderSummary()">Next</button>
+        </div>
+    </div>
+
+    <!-- Modal overlay -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-container">
+            <div class="content-wrapper">
+                <div class="container">
+                    <h2>Your Order</h2>
+                    <div class="order-details" id="orderSummary">
+                        <!-- Order details will be inserted here -->
+                    </div>
+                    <div class="total-price" id="totalPrice">
+                        <!-- Total price will be inserted here -->
+                    </div>
+                    <button onclick="confirmOrder()">Confirm Order</button>
+                    <button onclick="closeModal()">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -182,6 +247,65 @@
         }
 
         document.addEventListener('DOMContentLoaded', checkAuthStatus);
+
+        function calculatePrice(size) {
+            const prices = {
+                'Small': 2.50,
+                'Medium': 3.50,
+                'Large': 4.50
+            };
+            return prices[size] || 3.50;
+        }
+
+        function showOrderSummary() {
+            const coffeeName = document.getElementById('coffee-name').innerText;
+            const size = document.getElementById('selected-size').innerText;
+            const count = document.getElementById('countValue').innerText;
+            const sugar = document.getElementById('sugarValue').innerText;
+            
+            const pricePerCup = calculatePrice(size);
+            const totalPrice = pricePerCup * parseInt(count);
+
+            const summaryHtml = `
+                <p><strong>Coffee:</strong> ${coffeeName}</p>
+                <p><strong>Size:</strong> ${size}</p>
+                <p><strong>Quantity:</strong> ${count}</p>
+                <p><strong>Sugar:</strong> ${sugar}</p>
+                <p><strong>Price per cup:</strong> $${pricePerCup.toFixed(2)}</p>
+            `;
+
+            document.getElementById('orderSummary').innerHTML = summaryHtml;
+            document.getElementById('totalPrice').innerHTML = `
+                <p>Total: $${totalPrice.toFixed(2)}</p>
+            `;
+
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        async function confirmOrder() {
+            try {
+                const authResponse = await fetch('/auth/status');
+                const authData = await authResponse.json();
+                
+                if (!authData.loggedIn) {
+                    alert('Please login to place an order');
+                    window.location.href = '/login';
+                    return;
+                }
+
+                // Here you would typically send the order to your server
+                alert('Order confirmed! Thank you for your purchase.');
+                closeModal();
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Error confirming order:', error);
+                alert('Error processing order');
+            }
+        }
     </script>
 </body>
 </html>
