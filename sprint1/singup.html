@@ -41,67 +41,118 @@
 
   <div class="container">
     <h2>Personal Information</h2>
-    <label for="first-name">First Name</label>
-    <input type="text" id="first-name" placeholder="Enter your first name" required />
-    
-    <label for="last-name">Last Name</label>
-    <input type="text" id="last-name" placeholder="Enter your last name" required />
-    
-    <label for="password">Password</label>
-    <input type="password" id="password" placeholder="Enter your password" required />
-    
-    <label for="confirm-password">Repeat Password</label>
-    <input type="password" id="confirm-password" placeholder="Repeat your password" required />
-    
-    <button id="create-btn">Create</button>
+    <form id="signup-form" onsubmit="handleSubmit(event)">
+        <label for="first-name">First Name</label>
+        <input type="text" id="first-name" placeholder="Enter your first name" required />
+        
+        <label for="last-name">Last Name</label>
+        <input type="text" id="last-name" placeholder="Enter your last name" required />
+        
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required />
+        
+        <label for="confirm-password">Repeat Password</label>
+        <input type="password" id="confirm-password" placeholder="Repeat your password" required />
+        
+        <button type="submit" id="create-btn">Create</button>
+    </form>
   </div>
   </div>
   </div>
 
   <script>
-    document.getElementById('create-btn').addEventListener('click', async () => {
+    async function handleSubmit(event) {
+        event.preventDefault();
+        const button = document.getElementById('create-btn');
+        
+        if (button.disabled) {
+            return;
+        }
+
         try {
+            button.disabled = true;
+            button.textContent = 'Creating...';
+            
+            clearErrors();
+
             const firstName = document.getElementById('first-name').value.trim();
             const lastName = document.getElementById('last-name').value.trim();
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
-        
-            if (!firstName || !lastName || !password) {
-                alert("Please fill in all fields");
+
+            // Validation
+            if (!firstName || !lastName || !password || !confirmPassword) {
+                showError("All fields are required");
                 return;
             }
 
             if (password !== confirmPassword) {
-                alert("Passwords don't match!");
+                showError("Passwords don't match!");
                 return;
             }
-        
-            const userData = { firstName, lastName, password };
-        
+
             const response = await fetch('/register', {
                 method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(userData)
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    password
+                })
             });
-        
-            const result = await response.json();
-            
+
+            const data = await response.json();
+
             if (response.ok) {
-                alert(result.message);
-                if (result.redirect) {
-                    window.location.href = result.redirect;
-                }
+                alert('Registration successful! Redirecting to login page...');
+                window.location.href = '/login';
             } else {
-                throw new Error(result.error);
+                showError(data.error || 'Registration failed');
             }
         } catch (error) {
             console.error('Registration error:', error);
-            alert(error.message || "Error during registration. Please try again.");
+            showError('Error during registration. Please try again.');
+        } finally {
+            button.disabled = false;
+            button.textContent = 'Create';
         }
-    });
+    }
+
+    function showError(message) {
+        const errorDiv = document.getElementById('error-message') || 
+            document.createElement('div');
+        errorDiv.id = 'error-message';
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = message;
+        
+        const form = document.querySelector('.container');
+        if (!document.getElementById('error-message')) {
+            form.insertBefore(errorDiv, document.getElementById('create-btn'));
+        }
+    }
+
+    function clearErrors() {
+        const errorDiv = document.getElementById('error-message');
+        if (errorDiv) {
+            errorDiv.remove();
+        }
+    }
   </script>
+
+  <style>
+    .error-message {
+        color: #721c24;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 4px;
+        padding: 10px;
+        margin: 10px 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+  </style>
 </body>
 </html>
