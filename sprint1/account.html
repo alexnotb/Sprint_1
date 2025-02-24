@@ -63,10 +63,16 @@
           <label for="last-name">Last Name</label>
           <input type="text" id="last-name" placeholder="Enter your last name" required>
 
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Enter your password" required>
+          <label for="current-password">Current Password</label>
+          <input type="password" id="current-password" placeholder="Enter current password">
 
-          <button type="submit" class="submit-button">Save</button>
+          <label for="new-password">New Password</label>
+          <input type="password" id="new-password" placeholder="Enter new password">
+
+          <label for="confirm-password">Confirm New Password</label>
+          <input type="password" id="confirm-password" placeholder="Confirm new password">
+
+          <button type="submit" class="submit-button">Save Changes</button>
           <button type="button" onclick="logoutUser()" style="background-color: #ff4444;">LOG OUT</button>
         </form>
       </section>
@@ -186,6 +192,91 @@ document.getElementById('profile-image').addEventListener('change', async functi
         alert('Error uploading image');
     }
 });
+
+// Update form submission handler with password change logic
+document.getElementById('profile-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    try {
+        const firstName = document.getElementById('first-name').value.trim();
+        const lastName = document.getElementById('last-name').value.trim();
+        const currentPassword = document.getElementById('current-password').value;
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        if (!firstName || !lastName) {
+            alert('First name and last name are required');
+            return;
+        }
+
+        // Password change validation
+        if (newPassword || confirmPassword || currentPassword) {
+            if (!currentPassword) {
+                alert('Current password is required to change password');
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match');
+                return;
+            }
+            if (newPassword.length < 1) {
+                alert('New password is too short');
+                return;
+            }
+        }
+
+        const response = await fetch('/update-profile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                firstName,
+                lastName,
+                currentPassword,
+                newPassword: newPassword || undefined
+            })
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to update profile');
+        }
+
+        const result = await response.json();
+        alert('Profile updated successfully');
+        
+        // Clear password fields
+        document.getElementById('current-password').value = '';
+        document.getElementById('new-password').value = '';
+        document.getElementById('confirm-password').value = '';
+        
+        // Reload page to reflect changes
+        window.location.reload();
+    } catch (error) {
+        console.error('Profile update error:', error);
+        alert(error.message || 'Error updating profile');
+    }
+});
+
+// Add function to load current user data
+async function loadUserData() {
+    try {
+        const response = await fetch('/auth/status');
+        const data = await response.json();
+        
+        if (data.loggedIn && data.user) {
+            document.getElementById('first-name').value = data.user.firstName;
+            document.getElementById('last-name').value = data.user.lastName;
+            document.getElementById('password').value = ''; // Clear password field
+        }
+    } catch (error) {
+        console.error('Error loading user data:', error);
+    }
+}
+
+// Call loadUserData when page loads
+document.addEventListener('DOMContentLoaded', loadUserData);
 </script>
 </body>
 </html>

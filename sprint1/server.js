@@ -310,6 +310,65 @@ app.get('/profile-image', (req, res) => {
     }
 });
 
+// Add update profile endpoint
+app.post('/update-profile', (req, res) => {
+    const { firstName, lastName, currentPassword, newPassword } = req.body;
+
+    try {
+        const sessionPath = path.join(__dirname, 'data', 'sessions.json');
+        const usersPath = path.join(__dirname, 'data', 'users.json');
+        
+        // Check if user is authenticated
+        const sessions = JSON.parse(fs.readFileSync(sessionPath, 'utf8'));
+        const userSession = sessions[req.ip];
+        
+        if (!userSession) {
+            return res.status(401).json({ error: 'Not authenticated' });
+        }
+
+        // Update user data
+        const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
+        const user = users.find(u => 
+            u.firstName === userSession.user.firstName && 
+            u.lastName === userSession.user.lastName
+        );
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Verify current password if changing password
+        if (newPassword) {
+            if (!currentPassword || currentPassword !== user.password) {
+                return res.status(401).json({ error: 'Current password is incorrect' });
+            }
+            user.password = newPassword;
+        }
+
+        // Update user information
+        user.firstName = firstName;
+        user.lastName = lastName;
+
+        // Update session with new user info
+        userSession.user = {
+            firstName: user.firstName,
+            lastName: user.lastName
+        };
+
+        // Save updates
+        fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+        fs.writeFileSync(sessionPath, JSON.stringify(sessions, null, 2));
+
+        res.json({ 
+            message: 'Profile updated successfully',
+            user: { firstName: user.firstName, lastName: user.lastName }
+        });
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        res.status(500).json({ error: 'Error updating profile' });
+    }
+});
+
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
