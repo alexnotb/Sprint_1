@@ -16,5 +16,17 @@
     "lastName": "1",
     "password": "1",
     "createdAt": "2025-02-23T19:20:02.155Z"
+  },
+  {
+    "firstName": "Anna",
+    "lastName": "Bezkibalna",
+    "password": "1",
+    "createdAt": "2025-02-23T21:57:04.744Z"
+  },
+  {
+    "firstName": "Dmytro",
+    "lastName": "Bez",
+    "password": "1",
+    "createdAt": "2025-02-23T21:59:42.848Z"
   }
 ]
