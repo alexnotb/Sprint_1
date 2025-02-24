@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Подключаем CSS-файл со стилями -->
   <link rel="stylesheet" href="main.css?v=1">
-  <script src="account.js" defer></script>
  
 </head>
 <body>
@@ -66,6 +65,7 @@
           <input type="password" id="password" placeholder="Enter your password" required>
 
           <button type="submit" class="submit-button">Save</button>
+          <button type="button" onclick="logoutUser()" style="background-color: #ff4444;">LOG OUT</button>
         </form>
       </section>
     </div>
@@ -108,6 +108,32 @@
 }
 
 document.addEventListener('DOMContentLoaded', checkAuthStatus);
+
+async function logoutUser() {
+    try {
+        const response = await fetch('/logout', { 
+            method: 'POST',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
+        });
+        if (response.ok) {
+            // Clear any client-side storage if used
+            sessionStorage.clear();
+            localStorage.clear();
+            
+            // Force reload home page to clear any cached state
+            window.location.replace('/');
+        } else {
+            alert('Logout failed');
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+        alert('Error during logout');
+    }
+}
 </script>
 </body>
 </html>

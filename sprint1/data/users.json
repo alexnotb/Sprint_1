@@ -28,5 +28,11 @@
     "lastName": "Bez",
     "password": "1",
     "createdAt": "2025-02-23T21:59:42.848Z"
+  },
+  {
+    "firstName": "3",
+    "lastName": "3",
+    "password": "3",
+    "createdAt": "2025-02-24T17:34:18.458Z"
   }
 ]

@@ -54,32 +54,39 @@
 
   <script>
     document.getElementById('login-form').addEventListener('submit', async function(event) {
-      event.preventDefault();
-      
-      const firstName = document.getElementById('first-name').value;
-      const lastName = document.getElementById('last-name').value;
-      const password = document.getElementById('password').value;
+        event.preventDefault();
+        
+        try {
+            const firstName = document.getElementById('first-name').value.trim();
+            const lastName = document.getElementById('last-name').value.trim();
+            const password = document.getElementById('password').value;
 
-      const response = await fetch('/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ firstName, lastName, password })
-      });
+            if (!firstName || !lastName || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
 
-      const result = await response.json();
-      if (response.ok) {
-        const authCheck = await fetch('/auth/status');
-        const authData = await authCheck.json();
-        if (authData.loggedIn) {
-            window.location.href = '/home';
-        } else {
-            alert('Login successful but session not created');
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ firstName, lastName, password })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Login failed');
+            }
+
+            const result = await response.json();
+            window.location.href = '/';
+
+        } catch (error) {
+            console.error('Login error:', error);
+            alert(error.message || 'Error during login');
         }
-      } else {
-        alert(result.error);
-      }
     });
   </script>
 </body>
