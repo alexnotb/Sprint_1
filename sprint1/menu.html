@@ -136,15 +136,15 @@
         
         render() {
             return `
-                <a href="/order" class="coffee-card">
+                <div class="coffee-card">
                     <div class="coffee-text">
                         <h2>${this.name}</h2>
                         <p>${this.description}</p>
                     </div>
-                    <div class="coffee-image">
+                    <a href="/order?name=${encodeURIComponent(this.name)}" class="coffee-image">
                         <img src="${this.imageUrl}" alt="${this.name}">
-                    </div>
-                </a>
+                    </a>
+                </div>
             `;
         }
     }

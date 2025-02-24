@@ -7,84 +7,80 @@
     <link rel="stylesheet" href="main.css?v=1">
     <script src="/js/auth.js" defer></script>
     <style>
-        
         .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 15%;
-  background-color: #DDEAE1;
-  border-radius: 20px;
-  border: 1px solid #3A2A1A;
-  width: 97%; /* растягивает контейнер на всю ширину окна */
-  box-sizing: border-box; /* учитывает padding и border */
-}
-
-
-    
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15%;
+            background-color: #DDEAE1;
+            border-radius: 20px;
+            border: 1px solid #3A2A1A;
+            width: 97%; /* растягивает контейнер на всю ширину окна */
+            box-sizing: border-box; /* учитывает padding и border */
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="header-container">
-          <div class="content-wrapper">
-          <div class="header-container">
-            <img src="/logo.jpg" alt="Логотип" class="logo">
-            
-            <input type="checkbox" id="nav-toggle">
-            <label for="nav-toggle" class="hamburger-menu">
-              <span></span>
-              <span></span>
-              <span></span>
-            </label>
-        
-            <nav class="nav-links">
-              <a href="/home">HOME</a>
-              <a href="/menu">MENU</a>
-            </nav>
-        
-            <div class="account-controls">
-              <button type="button" onclick="location.href='/login';">LOGIN</button>
-              <button type="button" onclick="location.href='/singup';">SIGNIN</button>
+            <div class="content-wrapper">
+                <div class="header-container">
+                    <img src="/logo.jpg" alt="Логотип" class="logo">
+                    
+                    <input type="checkbox" id="nav-toggle">
+                    <label for="nav-toggle" class="hamburger-menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </label>
+                
+                    <nav class="nav-links">
+                        <a href="/home">HOME</a>
+                        <a href="/menu">MENU</a>
+                    </nav>
+                
+                    <div class="account-controls">
+                        <button type="button" onclick="location.href='/login';">LOGIN</button>
+                        <button type="button" onclick="location.href='/singup';">SIGNIN</button>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
         </div>
     </header>
 
     <div class="content-wrapper">
         <div class="container">
-        <h2>Name ☕</h2>
-        <div class="dropdown">
-            <button>Size ▼</button>
-        </div>
-        <div class="counter">
-            <button>Count</button>
-            <div>
-                <button onclick="decreaseCount('countValue')">-</button>
-                <span id="countValue">1</span>
-                <button onclick="increaseCount('countValue')">+</button>
+            <h2 id="coffee-name">Name ☕</h2>
+            <div class="dropdown">
+                <button>Size ▼</button>
             </div>
-        </div>
-        <div class="counter">
-            <button>Sugar</button>
-            <div>
-                <button onclick="decreaseCount('sugarValue')">-</button>
-                <span id="sugarValue">1</span>
-                <button onclick="increaseCount('sugarValue')">+</button>
+            <div class="counter">
+                <button>Count</button>
+                <div>
+                    <button onclick="decreaseCount('countValue')">-</button>
+                    <span id="countValue">1</span>
+                    <button onclick="increaseCount('countValue')">+</button>
+                </div>
             </div>
+            <div class="counter">
+                <button>Sugar</button>
+                <div>
+                    <button onclick="decreaseCount('sugarValue')">-</button>
+                    <span id="sugarValue">1</span>
+                    <button onclick="increaseCount('sugarValue')">+</button>
+                </div>
+            </div>
+            <button class="next-button">Next</button>
         </div>
-        <button class="next-button">Next</button>
-    </div>
     </div>
 
     <footer>
         <div class="content-wrapper">
-          <div class="blok">
-            <a class="email" href="mailto:EXAMPLE@GMAIL.COM">EXAMPLE@GMAIL.COM</a>
-            <a class="number" href="tel:+123456789">Contact: +123456789</a>
-          </div>
+            <div class="blok">
+                <a class="email" href="mailto:EXAMPLE@GMAIL.COM">EXAMPLE@GMAIL.COM</a>
+                <a class="number" href="tel:+123456789">Contact: +123456789</a>
+            </div>
         </div>
     </footer>
 
@@ -102,33 +98,42 @@
                 element.innerText = value - 1;
             }
         }
-        async function checkAuthStatus() {
-    try {
-        const response = await fetch('/auth/status');
-        const data = await response.json();
-        const accountControls = document.querySelector('.account-controls');
-        
-        if (data.loggedIn) {
-            accountControls.innerHTML = `
-                <button type="button" onclick="location.href='/account';" 
-                        style="background: none; border: none; cursor: pointer;">
-                    <div class="profile-icon" style="width: 40px; height: 40px; margin: 0;">
-                        <span style="color: var(--very-light-beige); font-size: 24px;">+</span>
-                    </div>
-                </button>
-            `;
-        } else {
-            accountControls.innerHTML = `
-                <button type="button" onclick="location.href='/login';">LOGIN</button>
-                <button type="button" onclick="location.href='/singup';">SIGNIN</button>
-            `;
-        }
-    } catch (error) {
-        console.error('Auth check error:', error);
-    }
-}
 
-document.addEventListener('DOMContentLoaded', checkAuthStatus);
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const coffeeName = urlParams.get('name');
+            if (coffeeName) {
+                document.getElementById('coffee-name').innerText = coffeeName;
+            }
+        });
+
+        async function checkAuthStatus() {
+            try {
+                const response = await fetch('/auth/status');
+                const data = await response.json();
+                const accountControls = document.querySelector('.account-controls');
+                
+                if (data.loggedIn) {
+                    accountControls.innerHTML = `
+                        <button type="button" onclick="location.href='/account';" 
+                                style="background: none; border: none; cursor: pointer;">
+                            <div class="profile-icon" style="width: 40px; height: 40px; margin: 0;">
+                                <span style="color: var(--very-light-beige); font-size: 24px;">+</span>
+                            </div>
+                        </button>
+                    `;
+                } else {
+                    accountControls.innerHTML = `
+                        <button type="button" onclick="location.href='/login';">LOGIN</button>
+                        <button type="button" onclick="location.href='/singup';">SIGNIN</button>
+                    `;
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', checkAuthStatus);
     </script>
 </body>
 </html>
