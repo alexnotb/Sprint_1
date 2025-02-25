@@ -5,35 +5,22 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const app = express();
 
+// Server configuration
 const hostname = '127.0.0.1';
 const port = 3000;
 
-// Add this near the top with other constants
+// Registration handling
 const registrationAttempts = new Map();
 const REGISTRATION_TIMEOUT = 5000; // 5 seconds
 
-// Middleware
+// Core middleware setup
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname)));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Add this near the top with other middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Add request logging middleware
-app.use((req, res, next) => {
-    if (req.path === '/register') {
-        console.log('Register request body:', req.body);
-    }
-    next();
-});
-
-// Update static file serving
 app.use('/js', express.static(path.join(__dirname, 'public/js')));
 
-// Add security headers middleware
+// Security middleware
 app.use((req, res, next) => {
     res.setHeader(
         'Content-Security-Policy',
@@ -43,7 +30,6 @@ app.use((req, res, next) => {
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
         "font-src 'self' https://fonts.gstatic.com; " +
         "style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-        "font-src 'self' https://fonts.gstatic.com; " +
         "frame-src 'self' *.google.com; " +
         "connect-src 'self' *.google.com *.googleapis.com;"
     );
@@ -53,16 +39,16 @@ app.use((req, res, next) => {
     next();
 });
 
-// Configure multer for file upload
+// File upload configuration
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
+    destination: (req, file, cb) => {
         const uploadDir = path.join(__dirname, 'public', 'uploads');
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir, { recursive: true });
         }
         cb(null, uploadDir);
     },
-    filename: function (req, file, cb) {
+    filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname);
     }
 });
@@ -78,7 +64,7 @@ const upload = multer({
     }
 });
 
-// Add this after middleware setup and before routes
+// Initialize data directory on startup
 const initializeDataDirectory = () => {
     const dataDir = path.join(__dirname, 'data');
     const usersPath = path.join(dataDir, 'users.json');
@@ -94,10 +80,9 @@ const initializeDataDirectory = () => {
     }
 };
 
-// Routes for HTML pages (update the array)
+// Routes setup
 const pages = ['home', 'login', 'account', 'menu', 'order'];
 
-// Add specific routes before the generic routes
 app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, 'signup.html'));
 });
@@ -106,7 +91,6 @@ app.get('/singup', (req, res) => {
     res.redirect(301, '/signup');
 });
 
-// Then handle generic routes
 pages.forEach(page => {
     app.get(`/${page}`, (req, res) => {
         res.sendFile(path.join(__dirname, `${page}.html`));
@@ -534,7 +518,7 @@ app.post('/save-order', (req, res) => {
     }
 });
 
-// Add this right before app.listen
+// Initialize data directory on startup
 initializeDataDirectory();
 
 app.listen(port, hostname, () => {

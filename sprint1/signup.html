@@ -12,10 +12,10 @@
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;            /* Изменено на 100%, чтобы учитывать padding */
-  max-width: 450px;       /* Ограничение максимальной ширины */
+  width: 100%;            /* Modified to account for padding */
+  max-width: 450px;       /* Maximum width limit */
   margin: 0 auto;
-  box-sizing: border-box; /* Учитывает padding в ширине */
+  box-sizing: border-box; /* Include padding in width */
   
   display: flex;
   flex-direction: column;
@@ -23,10 +23,10 @@
   align-items: flex-start;
 }
 
-/* Для мобильных устройств */
+/* Mobile devices */
 @media (max-width: 500px) {
   .container {
-    padding: 20px; /* Уменьшенный padding для небольших экранов */
+    padding: 20px; /* Reduced padding for small screens */
   }
 }
 
@@ -36,13 +36,11 @@
 <body>
   <div class="desktop-container">
   <div class="content-wrapper">
-  <!-- The image now directly uses the 'logo' class -->
-  <img class="logo" src="/logo.jpg" alt="Логотип" />
+  <img class="logo" src="/logo.jpg" alt="Logo" />
 
   <div class="container">
     <h2>Personal Information</h2>
     <form id="signup-form" onsubmit="handleSubmit(event)">
-        <!-- Add error container here -->
         <div id="error-container"></div>
         
         <label for="first-name">First Name</label>
