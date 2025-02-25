@@ -6,67 +6,65 @@
   <title>Coffee Shop</title>
   <link rel="stylesheet" href="main.css?v=1">
   <style>
+    .container {
+      background: #eaf3eb;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      width: 100%;            /* Changed to 100% to account for padding */
+      max-width: 450px;       /* Limit the maximum width */
+      margin: 0 auto;
+      box-sizing: border-box; /* Include padding in width calculation */
+      
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      align-items: flex-start;
+    }
 
-.container {
-  background: #eaf3eb;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;            /* Изменено на 100%, чтобы учитывать padding */
-  max-width: 450px;       /* Ограничение максимальной ширины */
-  margin: 0 auto;
-  box-sizing: border-box; /* Учитывает padding в ширине */
-  
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  align-items: flex-start;
-}
-
-/* Для мобильных устройств */
-@media (max-width: 500px) {
-  .container {
-    padding: 20px; /* Уменьшенный padding для небольших экранов */
-  }
-}
-
-
+    /* For mobile devices */
+    @media (max-width: 500px) {
+      .container {
+        padding: 20px; /* Reduced padding for smaller screens */
+      }
+    }
   </style>
 </head>
 <body>
   <div class="desktop-container">
-  <div class="content-wrapper">
-  <!-- The image now directly uses the 'logo' class -->
-  <img class="logo" src="/logo.jpg" alt="Логотип" />
+    <div class="content-wrapper">
+      <!-- The image now directly uses the 'logo' class -->
+      <img class="logo" src="/logo.jpg" alt="Logo" />
 
-  <div class="container">
-    <h2>Personal Information</h2>
-    <form id="signup-form" onsubmit="handleSubmit(event)">
-        <!-- Add error container here -->
-        <div id="error-container"></div>
-        
-        <label for="first-name">First Name</label>
-        <input type="text" id="first-name" placeholder="Enter your first name" required />
-        
-        <label for="last-name">Last Name</label>
-        <input type="text" id="last-name" placeholder="Enter your last name" required />
-        
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Enter your password" required />
-        
-        <label for="confirm-password">Repeat Password</label>
-        <input type="password" id="confirm-password" placeholder="Repeat your password" required />
-        
-        <button type="submit" id="create-btn">Create</button>
-    </form>
-  </div>
-  </div>
+      <div class="container">
+        <h2>Personal Information</h2>
+        <form id="signup-form" onsubmit="handleSubmit(event)">
+          <!-- Add error container here -->
+          <div id="error-container"></div>
+          
+          <label for="first-name">First Name</label>
+          <input type="text" id="first-name" placeholder="Enter your first name" required />
+          
+          <label for="last-name">Last Name</label>
+          <input type="text" id="last-name" placeholder="Enter your last name" required />
+          
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required />
+          
+          <label for="confirm-password">Repeat Password</label>
+          <input type="password" id="confirm-password" placeholder="Repeat your password" required />
+          
+          <button type="submit" id="create-btn">Create</button>
+        </form>
+      </div>
+    </div>
   </div>
 
   <script>
     let isSubmitting = false;
     let registrationSuccessful = false;
 
+    // Handle form submission
     async function handleSubmit(event) {
         event.preventDefault();
         
@@ -132,6 +130,7 @@
         }
     }
 
+    // Show error message
     function showError(message) {
         clearErrors();
         
@@ -146,6 +145,7 @@
         }
     }
 
+    // Clear error messages
     function clearErrors() {
         const errorContainer = document.getElementById('error-container');
         if (errorContainer) {
