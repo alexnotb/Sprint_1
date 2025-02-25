@@ -8,6 +8,10 @@ const app = express();
 const hostname = '127.0.0.1';
 const port = 3000;
 
+// Add this near the top with other constants
+const registrationAttempts = new Map();
+const REGISTRATION_TIMEOUT = 5000; // 5 seconds
+
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname)));
@@ -38,7 +42,9 @@ app.use((req, res, next) => {
         "script-src 'self' 'unsafe-inline' *.googleapis.com *.google.com; " +
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
         "font-src 'self' https://fonts.gstatic.com; " +
-        "frame-src 'self' *.google.com; " + // Allow Google Maps iframes
+        "style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+        "font-src 'self' https://fonts.gstatic.com; " +
+        "frame-src 'self' *.google.com; " +
         "connect-src 'self' *.google.com *.googleapis.com;"
     );
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -72,8 +78,35 @@ const upload = multer({
     }
 });
 
-// Routes for HTML pages
-const pages = ['home', 'login', 'singup', 'account', 'menu', 'order'];
+// Add this after middleware setup and before routes
+const initializeDataDirectory = () => {
+    const dataDir = path.join(__dirname, 'data');
+    const usersPath = path.join(dataDir, 'users.json');
+    
+    // Ensure data directory exists
+    if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+    }
+
+    // Ensure users.json exists
+    if (!fs.existsSync(usersPath)) {
+        fs.writeFileSync(usersPath, '[]', 'utf8');
+    }
+};
+
+// Routes for HTML pages (update the array)
+const pages = ['home', 'login', 'account', 'menu', 'order'];
+
+// Add specific routes before the generic routes
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, 'signup.html'));
+});
+
+app.get('/singup', (req, res) => {
+    res.redirect(301, '/signup');
+});
+
+// Then handle generic routes
 pages.forEach(page => {
     app.get(`/${page}`, (req, res) => {
         res.sendFile(path.join(__dirname, `${page}.html`));
@@ -168,29 +201,63 @@ app.post('/login', (req, res) => {
 
 // Registration endpoint
 app.post('/register', async (req, res) => {
-    console.log('Received registration request:', req.body);
+    const requestId = `${req.ip}_${req.body.firstName}_${req.body.lastName}`;
     
+    // Check if this is a duplicate request within timeout period
+    if (registrationAttempts.has(requestId)) {
+        const lastAttempt = registrationAttempts.get(requestId);
+        if (Date.now() - lastAttempt.timestamp < REGISTRATION_TIMEOUT) {
+            // If previous request was successful, return success response
+            if (lastAttempt.success) {
+                return res.status(201).json({
+                    message: "Registration successful",
+                    redirect: "/login"
+                });
+            }
+        }
+    }
+
+    // Mark the attempt
+    registrationAttempts.set(requestId, {
+        timestamp: Date.now(),
+        success: false
+    });
+
+    console.log('=== Starting Registration Process ===');
+    console.log('1. Request body:', req.body);
+    
+    const dataDir = path.join(__dirname, 'data');
+    const usersPath = path.join(dataDir, 'users.json');
+
     try {
         const { firstName, lastName, password } = req.body;
 
-        // Basic validation
-        if (!firstName || !lastName || !password) {
-            return res.status(400).json({ error: "All fields are required" });
+        if (!firstName?.trim() || !lastName?.trim() || !password?.trim()) {
+            console.log('Validation failed - missing or empty fields');
+            return res.status(400).json({ error: "All fields are required and cannot be empty" });
         }
 
-        // Ensure data directory exists
-        const dataDir = path.join(__dirname, 'data');
-        const usersPath = path.join(dataDir, 'users.json');
-        
-        if (!fs.existsSync(dataDir)) {
-            fs.mkdirSync(dataDir, { recursive: true });
-        }
-
-        // Read or initialize users array
+        // Read current users with error handling
         let users = [];
-        if (fs.existsSync(usersPath)) {
+        try {
             const data = fs.readFileSync(usersPath, 'utf8');
-            users = JSON.parse(data);
+            users = JSON.parse(data || '[]');
+        } catch (err) {
+            console.error('Error reading users file:', err);
+            users = [];
+        }
+
+        // Check for duplicate user
+        const existingUser = users.find(u => 
+            u.firstName.toLowerCase() === firstName.toLowerCase() && 
+            u.lastName.toLowerCase() === lastName.toLowerCase()
+        );
+        
+        if (existingUser) {
+            console.log('Duplicate user found');
+            return res.status(400).json({ 
+                error: "A user with this name already exists. Please use a different name or login."
+            });
         }
 
         // Create new user
@@ -203,7 +270,26 @@ app.post('/register', async (req, res) => {
         };
 
         users.push(newUser);
-        fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+
+        // Save with error handling
+        try {
+            fs.writeFileSync(usersPath, JSON.stringify(users, null, 2), 'utf8');
+            console.log('User saved successfully. Total users:', users.length);
+        } catch (err) {
+            console.error('Error saving users file:', err);
+            return res.status(500).json({ error: "Error saving user data" });
+        }
+
+        // Mark the attempt as successful
+        registrationAttempts.set(requestId, {
+            timestamp: Date.now(),
+            success: true
+        });
+
+        // Clean up old attempts periodically
+        setTimeout(() => {
+            registrationAttempts.delete(requestId);
+        }, REGISTRATION_TIMEOUT);
 
         res.status(201).json({ 
             message: "Registration successful",
@@ -211,9 +297,10 @@ app.post('/register', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Registration error:', error);
+        console.error('=== Registration Error ===');
+        console.error('Error details:', error);
         res.status(500).json({ 
-            error: "Server error during registration"
+            error: "Server error during registration. Please try again later."
         });
     }
 });
@@ -446,6 +533,9 @@ app.post('/save-order', (req, res) => {
         res.status(500).json({ error: 'Error saving order' });
     }
 });
+
+// Add this right before app.listen
+initializeDataDirectory();
 
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
