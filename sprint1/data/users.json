@@ -1,82 +1,12 @@
 [
   {
-    "firstName": "Oleksii",
+    "firstName": "1",
     "lastName": "1",
     "password": "1",
-    "createdAt": "2025-02-24T19:51:42.758Z",
+    "createdAt": "2025-02-25T16:55:05.023Z",
     "orders": [
-      1740426983605,
-      1740426983609
-    ],
-    "profileImage": null
-  },
-  {
-    "firstName": "Alexnotbeused",
-    "lastName": "1",
-    "password": "1",
-    "createdAt": "2025-02-24T19:54:05.799Z",
-    "orders": [],
-    "profileImage": null
-  },
-  {
-    "firstName": "Alexnotbeused2002020202",
-    "lastName": "12",
-    "password": "1",
-    "createdAt": "2025-02-24T19:54:35.499Z",
-    "orders": [],
-    "profileImage": null
-  },
-  {
-    "firstName": "Anna",
-    "lastName": "1",
-    "password": "1",
-    "createdAt": "2025-02-24T19:56:58.974Z",
-    "orders": [],
-    "profileImage": null
-  },
-  {
-    "firstName": "111",
-    "lastName": "111",
-    "password": "111",
-    "createdAt": "2025-02-24T20:10:05.231Z",
-    "orders": [
-      1740502051019,
-      1740502051021
-    ],
-    "profileImage": null
-  },
-  {
-    "firstName": "1111",
-    "lastName": "1111",
-    "password": "1111",
-    "createdAt": "2025-02-24T20:25:51.527Z",
-    "orders": [
-      1740428835017,
-      1740428835020
+      1740502523932,
+      1740502523935
     ]
-  },
-  {
-    "firstName": "1111",
-    "lastName": "1111",
-    "password": "1111",
-    "createdAt": "2025-02-24T20:25:51.530Z",
-    "orders": []
-  },
-  {
-    "firstName": "Anna",
-    "lastName": "Bezk",
-    "password": "12",
-    "createdAt": "2025-02-24T20:38:20.363Z",
-    "orders": [
-      1740429653456,
-      1740429653458
-    ]
-  },
-  {
-    "firstName": "Anna",
-    "lastName": "Bez",
-    "password": "1",
-    "createdAt": "2025-02-24T20:38:20.366Z",
-    "orders": []
   }
 ]
