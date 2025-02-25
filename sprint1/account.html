@@ -1,48 +1,47 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Настройки профиля</title>
+  <title>Profile Settings</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Подключаем CSS-файл со стилями -->
+  <!-- Link to CSS file with styles -->
   <link rel="stylesheet" href="main.css?v=1">
   <script src="/js/auth.js" defer></script>
- 
 </head>
 <body>
-  <!-- Шапка сайта -->
+  <!-- Site Header -->
   <header>
     <div class="header-container">
       <div class="content-wrapper">
-      <div class="header-container">
-        <img src="/logo.jpg" alt="Логотип" class="logo">
-        
-        <input type="checkbox" id="nav-toggle">
-        <label for="nav-toggle" class="hamburger-menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </label>
-    
-        <nav class="nav-links">
-          <a href="/home">HOME</a>
-          <a href="/order">ORDER</a>
-          <a href="/menu">MENU</a>
-        </nav>
-    
-        <div class="account-controls">
-          <button type="button" onclick="location.href='/login';">LOGIN</button>
-          <button type="button" onclick="location.href='/singup';">SIGNIN</button>
+        <div class="header-container">
+          <img src="/logo.jpg" alt="Logo" class="logo">
+          
+          <input type="checkbox" id="nav-toggle">
+          <label for="nav-toggle" class="hamburger-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </label>
+      
+          <nav class="nav-links">
+            <a href="/home">HOME</a>
+            <a href="/order">ORDER</a>
+            <a href="/menu">MENU</a>
+          </nav>
+      
+          <div class="account-controls">
+            <button type="button" onclick="location.href='/login';">LOGIN</button>
+            <button type="button" onclick="location.href='/singup';">SIGNIN</button>
+          </div>
         </div>
       </div>
     </div>
-    </div>
   </header>
 
-  <!-- Основной контент -->
+  <!-- Main Content -->
   <main>
     <div class="container">
-      <!-- Боковая панель (левый столбец) -->
+      <!-- Sidebar (left column) -->
       <aside class="left">
         <div class="settings-sidebar">
           <input type="file" id="profile-image" accept="image/*" style="display: none;">
@@ -53,7 +52,7 @@
         </div>
       </aside>
 
-      <!-- Форма профиля (правый столбец) -->
+      <!-- Profile Form (right column) -->
       <section class="right card profile-form">
         <h2>Personal Information</h2>
         <form id="profile-form">
@@ -79,7 +78,7 @@
     </div>
   </main>
 
-  <!-- Подвал сайта -->
+  <!-- Site Footer -->
   <footer>
     <div class="content-wrapper">
       <div class="blok">
@@ -87,196 +86,197 @@
         <a class="number" href="tel:+123456789">Contact: +123456789</a>
       </div>
     </div>
-</footer>
-<script>
-// Load profile image on page load
-async function loadProfileImage() {
-    try {
-        const response = await fetch('/profile-image');
-        if (response.ok) {
-            const data = await response.json();
-            if (data.imagePath) {
-                // Update both profile icon and header icon
-                const profileIcon = document.getElementById('profile-icon-content');
-                const headerIcon = document.querySelector('.account-controls .profile-icon span');
-                const imageHtml = `<img src="${data.imagePath}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
-                
-                profileIcon.innerHTML = imageHtml;
-                if (headerIcon) {
-                    headerIcon.parentElement.innerHTML = imageHtml;
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error loading profile image:', error);
-    }
-}
+  </footer>
 
-// Modify checkAuthStatus to include profile image
-async function checkAuthStatus() {
-    try {
-        const response = await fetch('/auth/status');
-        const data = await response.json();
-        const accountControls = document.querySelector('.account-controls');
-        
-        if (data.loggedIn) {
-            // Get profile image
-            const imageResponse = await fetch('/profile-image');
-            const imageData = await imageResponse.json();
-            const imageHtml = imageData.imagePath ? 
-                `<img src="${imageData.imagePath}" alt="Profile" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">` :
-                `<span style="color: var(--very-light-beige); font-size: 24px;">+</span>`;
+  <script>
+  // Load profile image on page load
+  async function loadProfileImage() {
+      try {
+          const response = await fetch('/profile-image');
+          if (response.ok) {
+              const data = await response.json();
+              if (data.imagePath) {
+                  // Update both profile icon and header icon
+                  const profileIcon = document.getElementById('profile-icon-content');
+                  const headerIcon = document.querySelector('.account-controls .profile-icon span');
+                  const imageHtml = `<img src="${data.imagePath}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                  
+                  profileIcon.innerHTML = imageHtml;
+                  if (headerIcon) {
+                      headerIcon.parentElement.innerHTML = imageHtml;
+                  }
+              }
+          }
+      } catch (error) {
+          console.error('Error loading profile image:', error);
+      }
+  }
 
-            accountControls.innerHTML = `
-                <button type="button" onclick="location.href='/account';" 
-                        style="background: none; border: none; cursor: pointer;">
-                    <div class="profile-icon" style="width: 40px; height: 40px; margin: 0;">
-                        ${imageHtml}
-                    </div>
-                </button>
-            `;
-        } else {
-            accountControls.innerHTML = `
-                <button type="button" onclick="location.href='/login';">LOGIN</button>
-                <button type="button" onclick="location.href='/singup';">SIGNIN</button>
-            `;
-        }
-    } catch (error) {
-        console.error('Auth check error:', error);
-    }
-}
+  // Modify checkAuthStatus to include profile image
+  async function checkAuthStatus() {
+      try {
+          const response = await fetch('/auth/status');
+          const data = await response.json();
+          const accountControls = document.querySelector('.account-controls');
+          
+          if (data.loggedIn) {
+              // Get profile image
+              const imageResponse = await fetch('/profile-image');
+              const imageData = await imageResponse.json();
+              const imageHtml = imageData.imagePath ? 
+                  `<img src="${imageData.imagePath}" alt="Profile" style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">` :
+                  `<span style="color: var(--very-light-beige); font-size: 24px;">+</span>`;
 
-// Call both functions on page load
-document.addEventListener('DOMContentLoaded', () => {
-    loadProfileImage();
-    checkAuthStatus();
-});
+              accountControls.innerHTML = `
+                  <button type="button" onclick="location.href='/account';" 
+                          style="background: none; border: none; cursor: pointer;">
+                      <div class="profile-icon" style="width: 40px; height: 40px; margin: 0;">
+                          ${imageHtml}
+                      </div>
+                  </button>
+              `;
+          } else {
+              accountControls.innerHTML = `
+                  <button type="button" onclick="location.href='/login';">LOGIN</button>
+                  <button type="button" onclick="location.href='/singup';">SIGNIN</button>
+              `;
+          }
+      } catch (error) {
+          console.error('Auth check error:', error);
+      }
+  }
 
-// Update profile image upload handler
-document.getElementById('profile-image').addEventListener('change', async function(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+  // Call both functions on page load
+  document.addEventListener('DOMContentLoaded', () => {
+      loadProfileImage();
+      checkAuthStatus();
+  });
 
-    if (!file.type.startsWith('image/')) {
-        alert('Please select an image file');
-        return;
-    }
+  // Update profile image upload handler
+  document.getElementById('profile-image').addEventListener('change', async function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
 
-    const formData = new FormData();
-    formData.append('profileImage', file);
+      if (!file.type.startsWith('image/')) {
+          alert('Please select an image file');
+          return;
+      }
 
-    try {
-        const response = await fetch('/upload-profile-image', {
-            method: 'POST',
-            body: formData
-        });
+      const formData = new FormData();
+      formData.append('profileImage', file);
 
-        if (!response.ok) {
-            throw new Error('Upload failed');
-        }
+      try {
+          const response = await fetch('/upload-profile-image', {
+              method: 'POST',
+              body: formData
+          });
 
-        const result = await response.json();
-        
-        // Update both profile icon and header icon
-        const imageHtml = `<img src="${result.imagePath}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
-        
-        document.getElementById('profile-icon-content').innerHTML = imageHtml;
-        
-        const headerIcon = document.querySelector('.account-controls .profile-icon');
-        if (headerIcon) {
-            headerIcon.innerHTML = imageHtml;
-        }
+          if (!response.ok) {
+              throw new Error('Upload failed');
+          }
 
-    } catch (error) {
-        console.error('Upload error:', error);
-        alert('Error uploading image');
-    }
-});
+          const result = await response.json();
+          
+          // Update both profile icon and header icon
+          const imageHtml = `<img src="${result.imagePath}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+          
+          document.getElementById('profile-icon-content').innerHTML = imageHtml;
+          
+          const headerIcon = document.querySelector('.account-controls .profile-icon');
+          if (headerIcon) {
+              headerIcon.innerHTML = imageHtml;
+          }
 
-// Update form submission handler with password change logic
-document.getElementById('profile-form').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    
-    try {
-        const firstName = document.getElementById('first-name').value.trim();
-        const lastName = document.getElementById('last-name').value.trim();
-        const currentPassword = document.getElementById('current-password').value;
-        const newPassword = document.getElementById('new-password').value;
-        const confirmPassword = document.getElementById('confirm-password').value;
+      } catch (error) {
+          console.error('Upload error:', error);
+          alert('Error uploading image');
+      }
+  });
 
-        if (!firstName || !lastName) {
-            alert('First name and last name are required');
-            return;
-        }
+  // Update form submission handler with password change logic
+  document.getElementById('profile-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      
+      try {
+          const firstName = document.getElementById('first-name').value.trim();
+          const lastName = document.getElementById('last-name').value.trim();
+          const currentPassword = document.getElementById('current-password').value;
+          const newPassword = document.getElementById('new-password').value;
+          const confirmPassword = document.getElementById('confirm-password').value;
 
-        // Password change validation
-        if (newPassword || confirmPassword || currentPassword) {
-            if (!currentPassword) {
-                alert('Current password is required to change password');
-                return;
-            }
-            if (newPassword !== confirmPassword) {
-                alert('New passwords do not match');
-                return;
-            }
-            if (newPassword.length < 1) {
-                alert('New password is too short');
-                return;
-            }
-        }
+          if (!firstName || !lastName) {
+              alert('First name and last name are required');
+              return;
+          }
 
-        const response = await fetch('/update-profile', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                firstName,
-                lastName,
-                currentPassword,
-                newPassword: newPassword || undefined
-            })
-        });
+          // Password change validation
+          if (newPassword || confirmPassword || currentPassword) {
+              if (!currentPassword) {
+                  alert('Current password is required to change password');
+                  return;
+              }
+              if (newPassword !== confirmPassword) {
+                  alert('New passwords do not match');
+                  return;
+              }
+              if (newPassword.length < 1) {
+                  alert('New password is too short');
+                  return;
+              }
+          }
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || 'Failed to update profile');
-        }
+          const response = await fetch('/update-profile', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  firstName,
+                  lastName,
+                  currentPassword,
+                  newPassword: newPassword || undefined
+              })
+          });
 
-        const result = await response.json();
-        alert('Profile updated successfully');
-        
-        // Clear password fields
-        document.getElementById('current-password').value = '';
-        document.getElementById('new-password').value = '';
-        document.getElementById('confirm-password').value = '';
-        
-        // Reload page to reflect changes
-        window.location.reload();
-    } catch (error) {
-        console.error('Profile update error:', error);
-        alert(error.message || 'Error updating profile');
-    }
-});
+          if (!response.ok) {
+              const error = await response.json();
+              throw new Error(error.error || 'Failed to update profile');
+          }
 
-// Add function to load current user data
-async function loadUserData() {
-    try {
-        const response = await fetch('/auth/status');
-        const data = await response.json();
-        
-        if (data.loggedIn && data.user) {
-            document.getElementById('first-name').value = data.user.firstName;
-            document.getElementById('last-name').value = data.user.lastName;
-            document.getElementById('password').value = ''; // Clear password field
-        }
-    } catch (error) {
-        console.error('Error loading user data:', error);
-    }
-}
+          const result = await response.json();
+          alert('Profile updated successfully');
+          
+          // Clear password fields
+          document.getElementById('current-password').value = '';
+          document.getElementById('new-password').value = '';
+          document.getElementById('confirm-password').value = '';
+          
+          // Reload page to reflect changes
+          window.location.reload();
+      } catch (error) {
+          console.error('Profile update error:', error);
+          alert(error.message || 'Error updating profile');
+      }
+  });
 
-// Call loadUserData when page loads
-document.addEventListener('DOMContentLoaded', loadUserData);
-</script>
+  // Add function to load current user data
+  async function loadUserData() {
+      try {
+          const response = await fetch('/auth/status');
+          const data = await response.json();
+          
+          if (data.loggedIn && data.user) {
+              document.getElementById('first-name').value = data.user.firstName;
+              document.getElementById('last-name').value = data.user.lastName;
+              document.getElementById('password').value = ''; // Clear password field
+          }
+      } catch (error) {
+          console.error('Error loading user data:', error);
+      }
+  }
+
+  // Call loadUserData when page loads
+  document.addEventListener('DOMContentLoaded', loadUserData);
+  </script>
 </body>
 </html>
