@@ -9,43 +9,5 @@
       1740426983609
     ],
     "profileImage": null
-  },
-  {
-    "firstName": "Alexnotbeused",
-    "lastName": "1",
-    "password": "1",
-    "createdAt": "2025-02-24T19:54:05.799Z",
-    "orders": [],
-    "profileImage": null
-  },
-  {
-    "firstName": "Alexnotbeused2002020202",
-    "lastName": "12",
-    "password": "1",
-    "createdAt": "2025-02-24T19:54:35.499Z",
-    "orders": [],
-    "profileImage": null
-  },
-  {
-    "firstName": "Anna",
-    "lastName": "1",
-    "password": "1",
-    "createdAt": "2025-02-24T19:56:58.974Z",
-    "orders": [],
-    "profileImage": null
-  },
-  {
-    "firstName": "32",
-    "lastName": "32",
-    "password": "32",
-    "createdAt": "2025-02-24T20:21:29.226Z",
-    "orders": []
-  },
-  {
-    "firstName": "32",
-    "lastName": "32",
-    "password": "32",
-    "createdAt": "2025-02-24T20:21:29.228Z",
-    "orders": []
   }
 ]
