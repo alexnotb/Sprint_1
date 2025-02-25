@@ -5,22 +5,20 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const app = express();
 
-// Server configuration
+// Core configuration
 const hostname = '127.0.0.1';
 const port = 3000;
-
-// Registration handling
 const registrationAttempts = new Map();
-const REGISTRATION_TIMEOUT = 5000; // 5 seconds
+const REGISTRATION_TIMEOUT = 5000;
 
-// Core middleware setup
+// Middleware setup
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname)));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/js', express.static(path.join(__dirname, 'public/js')));
 
-// Security middleware
+// Security headers
 app.use((req, res, next) => {
     res.setHeader(
         'Content-Security-Policy',
@@ -518,9 +516,8 @@ app.post('/save-order', (req, res) => {
     }
 });
 
-// Initialize data directory on startup
+// Initialize server
 initializeDataDirectory();
-
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
